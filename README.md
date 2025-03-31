@@ -72,6 +72,9 @@ npx prisma migrate dev --name init
 npm install --save-dev eslint eslint-plugin-svelte
 ```
 
+## mis en place de prettier
+```b
+
 # sv
 
 Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
