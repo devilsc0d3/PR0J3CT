@@ -67,7 +67,10 @@ model User {
 npx prisma migrate dev --name init
 ```
 
-
+## mis en place d'eslint
+```bash
+npm install --save-dev eslint eslint-plugin-svelte
+```
 
 # sv
 
