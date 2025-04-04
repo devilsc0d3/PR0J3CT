@@ -72,8 +72,23 @@ npx prisma migrate dev --name init
 npm install --save-dev eslint eslint-plugin-svelte
 ```
 
-## mis en place de prettier
-```b
+### création d'un backend
+
+Les +server.ts sont des fichiers qui permettent de créer des routes api,
+Les +page.svelte sont des fichiers qui permettent de créer des pages svelte
+Les +layout.svelte sont des fichiers qui permettent de créer des layouts svelte
+Les +page.server.ts sont des fichiers qui permettent de créer des pages svelte server donc de recuperer les data du +server.ts
+cree un un fichier +server.ts dans le dossier src/routes/api/user
+```ts
+import { PrismaClient } from '@prisma/client';
+```
+
+
+### creation d'une page svelte
+
+Créer un dossier avec le nom de la route dans le dossier src/routes, 
+donc pour cree une route localhost:3000/test, 
+il faut créer un dossier test dans src/routes et cree une +page.svelte dedans
 
 # sv
 
@@ -113,6 +128,12 @@ npm run build
 You can preview the production build with `npm run preview`.
 
 > To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+
+---
+layout server
+layout nabvar
+hook cookie
+props
 
 ---
 

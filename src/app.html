@@ -6,20 +6,15 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		%sveltekit.head%
 	</head>
+	<style>
+		body {
+			font-family: 'Helvetica Neue', sans-serif;
+			margin: 0;
+			padding: 0;
+			background-color: #f0f0f0;
+		}
+	</style>
 	<body data-sveltekit-preload-data="hover">
-		<header>
-			<nav align="center">
-				<a href="/">PR0J3CT</a>
-				<a href="/about">About</a>
-			</nav>
-		</header>
-		<main>
-			<h1 align="center">Crée et façonne TES PROJECTS en toute Liberté</h1>
-			<div style="display: contents">%sveltekit.body%</div>
-		</main>
-		<div class="spacer"></div>
-		<footer>
-			<p>&copy; 2025</p>
-		</footer>
+	<div style="display: contents">%sveltekit.body%</div>
 	</body>
 </html>
