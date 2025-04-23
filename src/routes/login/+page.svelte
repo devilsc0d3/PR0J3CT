@@ -1,11 +1,51 @@
-<script>
-    // You can add scripts here if necessary
+<script lang="ts">
+    let email = '';
+    let password = '';
+    let error = '';
+    let success = '';
+
+    /**
+     * Function to handle login
+     */
+    const login = async () => {
+        try {
+            error = '';
+            success = '';
+
+            // Validate input
+            if (!email || !password) {
+                error = 'Veuillez remplir tous les champs.';
+                return;
+            }
+
+            const res = await fetch('/api/user/login', {
+                method: 'POST',
+                body: JSON.stringify({email, password}),
+                headers: {'Content-Type': 'application/json'}
+            });
+
+            // Check response
+            const data = await res.json();
+            if (!res.ok) {
+                error = data.error || 'Erreur inconnue.';
+            } else {
+                success = 'succes, redirecting to profile page...';
+                setTimeout(() => {
+                    window.location.href = '/profile';
+                });
+            }
+        } catch (err) {
+            error = 'Erreur de connexion au serveur.';
+        }
+    };
 </script>
 
+
 <style>
-    body {
+    .body {
+        background: url('wallpaper3.jpg') no-repeat center center fixed;
+        background-size: cover;
         font-family: Arial, sans-serif;
-        background-color: #dfdfdf;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -23,19 +63,14 @@
     .login-container {
         background-color: #fff;
         padding: 2rem;
-        border-radius: 16px 72px 72px 16px;
+        border-radius: 16px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        max-width: 800px;
-        width: 100%;
+        max-width: 400px;
+        width: 80%;
         display: flex;
         align-items: center;
         margin: auto;
-    }
-
-    .svg-container {
-        flex: 1;
-        display: flex;
-        justify-content: center;
+        z-index: 2;
     }
 
     .form-container {
@@ -48,10 +83,8 @@
     }
 
     .title {
-        position: absolute;
-        top :0;
-        color: #333;
         text-align: center;
+        color: #fdbd2d;
     }
 
     form {
@@ -72,7 +105,7 @@
 
     button {
         padding: 0.75rem;
-        background-color: #007bff;
+        background-color: #fdbd2d;
         color: #fff;
         border: none;
         border-radius: 4px;
@@ -83,26 +116,40 @@
     }
 
     button:hover {
-        background-color: #0056b3;
+        background-color: #ffce62;
     }
 
-    img {
-        max-width: 100%;
+    .error {
+        color: red;
+        background-color: #fac4cc;
+        border: 1px solid #fd5972;
+        padding: 5px;
+        margin-top: 1rem;
     }
 
-
+    .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.2);
+        z-index: 1;
+    }
 </style>
+<div class="body">
+    <div class="login-container centered-element">
+        <div class="form-container">
+            <img src="logo.jpg" alt="Logo" style="width: 100px; height: auto; margin-bottom: 1rem;">
+            <h1 class="title">Login</h1>
+            <form on:submit|preventDefault={login}>
+                <input id="email" type="email" name="email" placeholder="Email" bind:value={email}/>
+                <input id="password" type="password" name="password" placeholder="Password" bind:value={password}/>
+                <button type="submit">Register</button>
+            </form>
 
-<div class="login-container centered-element">
-    <div class="svg-container">
-        <img src="/shape1.svg" alt="Decorative Shape" />
-    </div>
-    <div class="form-container">
-        <h1 class="title">Login and Explore your Projects !</h1>
-        <form action="?/auth/login" method="post" use="enhance">
-            <input id="email" type="email" name="email" placeholder="Email" />
-            <input id="password" type="password" name="password" placeholder="Password" />
-            <button type="submit">Login</button>
-        </form>
+            {#if error}<p class="error">{error}</p>{/if}
+            {#if success}<p style="color:green">{success}</p>{/if}
+        </div>
     </div>
 </div>

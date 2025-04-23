@@ -3,18 +3,38 @@
 </script>
 
 <style>
-    .m-0 {
+
+    section {
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-color: #ffffff;
+        height: 100vh;
         margin: 0;
     }
 
-    .m-5 {
-        margin: 50%;
+    .container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        text-align: center;
     }
 
     h1 {
-        font-size: 3rem;
-        color: #333;
-        width: 240px;
+        font-size: clamp(80px, 50%, 200px);
+        margin: 0;
+    }
+
+    img {
+        width: clamp(10px, 30%, 500px);
     }
 </style>
-<h1 class="center m-5">error : {page.status}</h1>
+<section>
+    <div class="container">
+        <h1 class="">{page.status}</h1>
+        <p class=""> {page.error.message}</p>
+        <img src="http://localhost:5177/desesperate.jpg" alt="Error Image" class="error-image">
+    </div>
+</section>
