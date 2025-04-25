@@ -35,6 +35,6 @@
     <div class="container">
         <h1 class="">{page.status}</h1>
         <p class=""> {page.error.message}</p>
-        <img src="http://localhost:5177/desesperate.jpg" alt="Error Image" class="error-image">
+        <img src="http://localhost:5173/desesperate.jpg" alt="Error Image" class="error-image">
     </div>
 </section>

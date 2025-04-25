@@ -1,11 +1,22 @@
 <script lang="ts">
 
     import {onMount} from "svelte";
+    import Modal from "$lib/Modal.svelte";
 
+    let showModal = false;
+
+    const openModal = () => {
+        showModal = true;
+    };
+
+    const closeModal = () => {
+        showModal = false;
+    };
     interface Project {
         id: string;
         title: string;
         description: string;
+        background: string;
         createdAt: string;
         updatedAt: string;
     }
@@ -47,6 +58,39 @@
     onMount(async () => {
         projects = await getProjects();
     });
+
+    export let data;
+    let title = '';
+    let description = '';
+    let success = '';
+
+    const user = data.user;
+    const id_user = user?.id;
+    /**
+     * Creates a new project using the API.
+     * @returns {Promise<void>}
+     */
+    const createProject = async (): Promise<void> => {
+        const res = await fetch('/api/projects', {
+            method: 'POST',
+            body: JSON.stringify({
+                title,
+                description,
+                id_user
+            }),
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        if (res.ok) {
+            const newProject = await res.json();
+            projects.push(newProject);
+            success = 'Project created successfully';
+            closeModal();
+        } else {
+            console.error('Failed to create project');
+            success = 'Failed to create project';
+        }
+    };
 </script>
 
 <style>
@@ -55,17 +99,33 @@
         justify-content: space-between;
         align-items: center;
         padding: 1rem;
-        background-color: #f8f9fa;
+        background: url("header2.jpg") no-repeat center center;
+        background-size: cover;
+        height: 80px;
+        color: #ffffff;
+        z-index: 5;
+    }
+
+    nav {
+        z-index: 2;
     }
 
     nav a {
-        margin-right: 1rem;
+        margin: 25px;
+        padding:  10px 20px 50px 20px;
         text-decoration: none;
-        color: #007bff;
+        color: #ffffff;
+    }
+
+    h1 {
+        z-index: 2;
+
     }
 
     nav button {
+        margin: 25px;
         background-color: #dc3545;
+        border-radius: 7px;
         color: white;
         border: none;
         padding: 0.5rem 1rem;
@@ -73,8 +133,22 @@
     }
 
     main {
-        padding: 2rem;
+        position: relative;
+        margin: 0 25px;
     }
+
+    .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 80px;
+        background-color: rgba(0, 0, 0, 0.7);
+        z-index: 1;
+        padding: 1rem;
+
+    }
+
 
     h1 {
         margin-bottom: 1rem;
@@ -87,29 +161,98 @@
 
     li {
         margin-bottom: 1rem;
+        width: 400px;
     }
 
     .card {
-        width: 200px;
+        width: clamp(250px, 50vw, 400px);
+        height: 100px;
         border: 1px solid #ced4da;
         border-radius: 0.25rem;
         padding: 1rem;
-        background-color: #ffffff;
+        background-position: center;
+        background-size: cover;
+        margin: 10px;
     }
 
     .card h2 {
-        margin: 0;
+        text-decoration: None;
+        color: #ffffff;
+        text-align: center;
         font-size: 1.25rem;
+        z-index: 11;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    ul {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-evenly;
+    }
+
+    .new {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 100px;
+        color: #000000;
+        border: none;
+        cursor: pointer;
+        padding: 10px 0;
+        border-radius: 100%;
+        /*shadow*/
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .new img {
+        width: 100%;
+        height: 100%;
+    }
+
+    .center {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+    }
+
+    .overlay2 {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        top : -73px;
+        left: -26px;
+        background-color: rgba(0, 0, 0, 0.5);
+        border-radius: 0.25rem;
+        margin: 10px;
+        padding: 1rem;
+        z-index: 1;
+    }
+
+    .test1 {
+        position: relative;
+        z-index: 2;
+    }
+
+    .active {
+        background-color: #f1f1f1;
+        color: #000000;
+        border-radius: 10px 10px 0 0;
     }
 </style>
 
 <header>
     <h1>Profile</h1>
     <nav>
-        <a href="/profile">Profile</a>
-        <a href="/profile/settings">Settings</a>
+        <a href="/profile" class="active">workspaces</a>
+        <a href="/profile/setting">Settings</a>
         <button on:click={logout}>Logout</button>
     </nav>
+    <div class="overlay"></div>
 </header>
 <main>
 
@@ -117,12 +260,35 @@
     <ul>
         {#each projects as project}
             <li>
+<!--                <a href={`/profile/workspace`}>-->
                 <a href={`/profile/workspace/${project.id}`}>
-                    <div class="card">
-                        <h2>{project.title}</h2>
+                    <div class="card" style={`background-image: url('${project.background}')`}>
+                        <h2 class="test1">{project.title}</h2>
+                        <div class="overlay2"></div>
                     </div>
                 </a>
             </li>
         {/each}
     </ul>
+
+    <button on:click={openModal} class="new">
+        <img src="create.svg" alt="Create Project" style="width: 70px; height: 70px;">
+    </button>
+
 </main>
+<Modal bind:showModal onClose={closeModal}>
+    <div class="center">
+        <h2>Nouveau Projet</h2>
+        <form on:submit|preventDefault={createProject}>
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" bind:value={title} required> <br>
+
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" bind:value={description} required></textarea><br>
+            <br>
+            <button type="submit">Create Project</button>
+        </form>
+        {#if success}<p style="color:green">{success}</p>{/if}
+
+    </div>
+</Modal>

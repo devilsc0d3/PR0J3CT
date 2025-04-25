@@ -48,7 +48,7 @@
     .main-content {
         display: flex;
         justify-content: space-between;
-        background: url('wallpaper4.jpg') no-repeat fixed;
+        background: url('wallpaper4.jpg') no-repeat fixed center;
         background-size: cover;
         align-items: center;
         height: 100vh;
@@ -161,10 +161,7 @@
                     </button></a>
                 </div>
             </div>
-
-
         </div>
-
         <div class="wave-container">
             <svg viewBox="0 0 1000 200" preserveAspectRatio="none" style="width: 100%; height: 100%;">
                 <path

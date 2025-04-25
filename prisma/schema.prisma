@@ -27,7 +27,8 @@ model Users {
 model projects {
   id          String   @id @default(cuid())
   title       String
-  description String
+  description String?
+  background  String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 

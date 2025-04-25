@@ -5,8 +5,8 @@ import { json } from '@sveltejs/kit';
 const prisma = new PrismaClient();
 
 export const POST: RequestHandler = async ({ request }) => {
-    const { title, description } = await request.json();
-    const userId = "cm92uiucd0000mdv0folaa4la" as string;
+    const { title, description,userId } = await request.json();
+    // const userId = "cm92uiucd0000mdv0folaa4la" as string;
     // const userId = request.headers.get('userId');
     try {
         const project = await prisma.projects.create({
