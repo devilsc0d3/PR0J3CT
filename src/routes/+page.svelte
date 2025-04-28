@@ -1,3 +1,10 @@
+<script>
+    import {onMount} from "svelte";
+
+    onMount(() => {
+        document.body.style.overflowY = 'auto;';
+    });
+</script>
 
 <style>
 
@@ -180,12 +187,12 @@
 
     <section>
         <h1 class="section-title">Des outils pour vous aider</h1>
-        <img src="tools.jpg" alt="Tools" class="tools-image">
+        <img src="peoples.jpg" alt="Tools" class="tools-image">
     </section>
 
     <section>
         <h1 class="section-title">Une personalisation total</h1>
-        <img src="community.jpg" alt="Community" class="community-image">
+        <img src="peoples.jpg" alt="Community" class="community-image">
     </section>
 
     <footer>

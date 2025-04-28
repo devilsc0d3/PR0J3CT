@@ -140,7 +140,7 @@
 <div class="body">
     <div class="login-container centered-element">
         <div class="form-container">
-            <img src="logo.jpg" alt="Logo" style="width: 100px; height: auto; margin-bottom: 1rem;">
+            <a href="/"><img src="logo.jpg" alt="Logo" style="width: 100px; height: auto; margin-bottom: 1rem;"></a>
             <h1 class="title">Login</h1>
             <form on:submit|preventDefault={login}>
                 <input id="email" type="email" name="email" placeholder="Email" bind:value={email}/>

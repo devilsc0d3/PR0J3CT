@@ -56,12 +56,15 @@
     let projects: Project[] = [];
 
     onMount(async () => {
+        document.body.style.overflowY = 'auto';
         projects = await getProjects();
     });
+
 
     export let data;
     let title = '';
     let description = '';
+    let background = '#ffffff';
     let success = '';
 
     const user = data.user;
@@ -71,11 +74,17 @@
      * @returns {Promise<void>}
      */
     const createProject = async (): Promise<void> => {
-        const res = await fetch('/api/projects', {
+        console.log("Create project");
+        console.log(title);
+        console.log(description);
+        console.log(background);
+        console.log(id_user);
+        const res = await fetch('/api/projects/id-user/' + id_user, {
             method: 'POST',
             body: JSON.stringify({
                 title,
                 description,
+                background,
                 id_user
             }),
             headers: { 'Content-Type': 'application/json' }
@@ -243,9 +252,18 @@
         color: #000000;
         border-radius: 10px 10px 0 0;
     }
+
+    .first-ground {
+       z-index: -1;
+    }
+
+    .second-ground {
+        z-index: 2;
+    }
 </style>
 
 <header>
+    <a href="/" class="second-ground"><img src="/logo.jpg" style="width: 80px" alt="logo"></a>
     <h1>Profile</h1>
     <nav>
         <a href="/profile" class="active">workspaces</a>
@@ -255,17 +273,15 @@
     <div class="overlay"></div>
 </header>
 <main>
-
     <h1>My Pr0j3cts</h1>
     <ul>
         {#each projects as project}
             <li>
-<!--                <a href={`/profile/workspace`}>-->
                 <a href={`/profile/workspace/${project.id}`}>
-                    <div class="card" style={`background-image: url('${project.background}')`}>
-                        <h2 class="test1">{project.title}</h2>
-                        <div class="overlay2"></div>
-                    </div>
+                    <div class="card" style={project.background?.startsWith('http')? `background-image: url('${project.background}')`: `background-color: ${project.background}`}>
+                            <h2 class="test1">{project.title}</h2>
+                            <div class="overlay2"></div>
+                        </div>
                 </a>
             </li>
         {/each}
@@ -286,6 +302,7 @@
             <label for="description">Description:</label>
             <textarea id="description" name="description" bind:value={description} required></textarea><br>
             <br>
+            <input type="color" id="background" name="background" bind:value={background} required>
             <button type="submit">Create Project</button>
         </form>
         {#if success}<p style="color:green">{success}</p>{/if}

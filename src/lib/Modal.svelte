@@ -16,7 +16,6 @@
 
 <style>
     .modal-backdrop {
-
         position: fixed;
         top: 0;
         left: 0;
@@ -24,7 +23,6 @@
         height: 100%;
         background-color: rgba(0, 0, 0, 0.2);
         z-index: 10;
-
     }
 
     .modal-content {
