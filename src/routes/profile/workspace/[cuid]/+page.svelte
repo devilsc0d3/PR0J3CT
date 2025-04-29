@@ -1,9 +1,9 @@
 <script lang="ts">
-    import { goto } from '$app/navigation';  // Importer goto depuis SvelteKit
-    import { onMount, onDestroy } from 'svelte';
-    import { page } from '$app/stores';
+    import {goto} from '$app/navigation'; // Importer goto depuis SvelteKit
+    import {onMount} from 'svelte';
+    import {page} from '$app/stores';
     import Modal from "$lib/Modal.svelte";
-    import ModalDesciption from "$lib/ModalDesciption.svelte";
+    import ModalDescription from "$lib/ModalDesciption.svelte";
 
     onMount(() => {
         document.body.style.overflowY = 'hidden';
@@ -47,8 +47,7 @@
     const getProjectId = async () => {
         const response = await fetch(`/api/projects/${projectId}`);
         if (response.ok) {
-            const project = await response.json();
-            return project;
+            return await response.json();
         } else {
             console.error("Erreur lors de la récupération du projet");
         }
@@ -95,7 +94,6 @@
         });
 
         if (response.ok) {
-            const updatedTask = await response.json();
             // Réajuster l'état local avec la nouvelle tâche mise à jour
             tasks = tasks.map(task =>
                 task.id === taskId ? { ...task, columnId: newColumnId } : task
@@ -289,14 +287,6 @@
 </script>
 
 <style>
-
-    .h3 {
-        color: #ffffff;
-        font-size: 2em;
-        text-align: center;
-        margin: 0;
-        padding: 20px;
-    }
     .header {
         color : #ffffff;
         position: fixed;
@@ -311,12 +301,6 @@
         padding: 10px;
     }
 
-    .header h1 {
-        font-size: 1.5em;
-        text-align: center;
-        margin: 0;
-        padding: 20px;
-    }
     .board {
         display: flex;
         justify-content: start;
@@ -335,13 +319,6 @@
         transition: background-color 0.3s;
     }
 
-    .column h2 {
-        text-align: center;
-        font-size: 1.5em;
-        margin: 20px;
-        color: #ffffff;
-    }
-
     .task {
         background-color: #fff;
         border-radius: 4px;
@@ -356,20 +333,6 @@
         font-size: 1.2em;
         margin: 0;
     }
-
-    .task p {
-        font-size: 0.9em;
-        margin-top: 8px;
-    }
-
-    .column.dragover {
-        background-color: #e7f7ff;
-    }
-
-    .task.dragging {
-        opacity: 0.5;
-    }
-
 
     .body {
 
@@ -407,7 +370,7 @@
         transition: transform 0.2s;
     }
 
-    .space-beetween {
+    .space-between {
         padding: 10px;
         display: flex;
         justify-content: space-around;
@@ -421,31 +384,19 @@
         cursor: pointer;
     }
 
-    /*.margin-50px {*/
-    /*    margin: 50px;*/
-    /*}*/
-
     .center-block {
         text-align: center;
         display: block;
     }
 </style>
-
-<!--<ModalDesciption bind:showModalDescription onClose={closeModalDescription}/>-->
-<ModalDesciption bind:showModalDescription onClose={closeModalDescription}>
-    <div class="center-block br-50px blue">
-        <h1>{project.title}</h1><br>
-        <p>{project.description}</p>
-    </div>
-</ModalDesciption>
 <div class="body" style={project.background?.startsWith('http')? `background-image: url('${project.background}')`: `background-color: ${project.background}`}>
 
     <header class="header">
-        <div class="space-beetween">
-            <a href="/profile"><img class="icon" src="http://localhost:5173/workspace.svg" alt="Workspace" /></a>
-            <button on:click={openModalDescription} class="new"><img class="icon" src="http://localhost:5173/description.svg" alt="Workspace" /></button>
-            <img class="icon" src="http://localhost:5173/share.svg" alt="Workspace" />
-            <img class="icon" src="http://localhost:5173/filter.svg" alt="Workspace" />
+        <div class="space-between">
+            <a href="/profile"><img class="icon" src="/images/icon/workspace.svg" alt="Workspace" /></a>
+            <button on:click={openModalDescription} class="new"><img class="icon" src="/images/icon/description.svg" alt="description" /></button>
+            <img class="icon" src="/images/icon/share.svg" alt="share" />
+            <img class="icon" src="/images/icon/filter.svg" alt="filter" />
         </div>
     </header>
     {#if loading}
@@ -455,32 +406,20 @@
     {:else}
         <div class="board">
             {#each columns as column (column.id)}
-                <section
-                        class="column"
-                        role="region"
-                        on:dragover={onDragOver}
-                        on:drop={(event) => onDrop(event, column.id)}
-                >
-                    <div class="space-beetween">
+                <section class="column" on:dragover={onDragOver} on:drop={(event) => onDrop(event, column.id)}>
+                    <div class="space-between">
                         <input type="text" bind:value={column.name} on:blur={() => updateColumnName(column.id, column.name)} on:keydown={(e) => e.key === 'Enter' && updateColumnName(column.id, column.name)}/>
-                        <img src="/delete.svg" alt="Supprimer" class="icon" on:click={() => deleteColumn(column.id)} />
+                        <img src="/images/icon/delete.svg" alt="Supprimer" class="icon" on:click={() => deleteColumn(column.id)} />
                     </div>
 
                     <div class="tasks">
                         {#each getTasksForColumn(column.id) as task (task.id)}
                             <button on:click={openModal}>
-                            <div
-                                    class="task"
-                                    role="button"
-                                    draggable="true"
-                                    on:dragstart={(event) => onDragStart(event, task.id, task.columnId)}
-                                    on:dragend={onDragEnd}
-                            >
-                                <div class="space-beetween">
+                            <div class="task" role="button" draggable="true" on:dragstart={(event) => onDragStart(event, task.id, task.columnId)} on:dragend={onDragEnd}>
+                                <div class="space-between">
                                     <h3>{task.title}</h3>
-                                    <img src="/delete.svg" alt="Supprimer" class="icon-black" on:click={() => deleteTask(task.id)} />
+                                    <img src="/images/icon/delete.svg" alt="Supprimer" class="icon-black" on:click={() => deleteTask(task.id)} />
                                 </div>
-
                             </div>
                             </button>
                         {/each}
@@ -501,9 +440,16 @@
         </div>
     {/if}
 </div>
+
 <Modal bind:showModal onClose={closeModal}>
     <div class="center">
-        <h1>aazerty</h1>
+        <h1>azerty</h1>
         <textarea></textarea>
     </div>
 </Modal>
+<ModalDescription bind:showModalDescription onClose={closeModalDescription}>
+    <div class="center-block br-50px blue">
+        <h1>{project.title}</h1><br>
+        <p>{project.description}</p>
+    </div>
+</ModalDescription>

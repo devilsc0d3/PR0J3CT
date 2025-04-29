@@ -108,7 +108,7 @@
         justify-content: space-between;
         align-items: center;
         padding: 1rem;
-        background: url("header2.jpg") no-repeat center center;
+        background: url('/images/background/header2.jpg') no-repeat center center;
         background-size: cover;
         height: 80px;
         color: #ffffff;
@@ -253,17 +253,13 @@
         border-radius: 10px 10px 0 0;
     }
 
-    .first-ground {
-       z-index: -1;
-    }
-
     .second-ground {
         z-index: 2;
     }
 </style>
 
 <header>
-    <a href="/" class="second-ground"><img src="/logo.jpg" style="width: 80px" alt="logo"></a>
+    <a href="/" class="second-ground"><img src="/images/icon/logo.jpg" style="width: 80px" alt="logo"></a>
     <h1>Profile</h1>
     <nav>
         <a href="/profile" class="active">workspaces</a>

@@ -1,14 +1,4 @@
 <script lang="ts">
-
-    import {onMount} from "svelte";
-
-    interface Project {
-        id: string;
-        title: string;
-        description: string;
-        createdAt: string;
-        updatedAt: string;
-    }
     const logout = async () => {
         const res = await fetch('/api/user/logout', {
             method: 'POST',
@@ -21,8 +11,6 @@
             console.error('Logout failed');
         }
     };
-
-
 </script>
 
 <style>
@@ -31,7 +19,7 @@
         justify-content: space-between;
         align-items: center;
         padding: 1rem;
-        background: url("header.jpg") no-repeat center center;
+        background: url('/images/background/header.jpg') no-repeat center center;
         background-size: cover;
         height: 80px;
         color: #ffffff;

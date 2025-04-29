@@ -55,7 +55,7 @@
     .main-content {
         display: flex;
         justify-content: space-between;
-        background: url('wallpaper4.jpg') no-repeat fixed center;
+        background: url('/images/background/wallpaper4.jpg') no-repeat fixed center;
         background-size: cover;
         align-items: center;
         height: 100vh;
@@ -143,7 +143,7 @@
         left: 50%;
         transform: translate(-50%, -50%);
     }
-    .space-beetween {
+    .space-between {
         display: flex;
         justify-content: space-between;
         width: 100%;
@@ -162,7 +162,7 @@
             </p>
 
             <div class="center-pos">
-                <div class="space-beetween">
+                <div class="space-between">
                     <a href="/login"><button class="button type1 center-pos">
                         <span class="btn-txt">Commencer</span>
                     </button></a>
@@ -182,21 +182,21 @@
     <!--    // presentation-->
     <section>
         <h1 class="section-title">Des projects sans limite !</h1>
-        <img src="peoples.jpg" alt="People working together" class="people-image">
+        <img src="/images/icon/peoples.jpg" alt="People working together" class="people-image">
     </section>
 
     <section>
         <h1 class="section-title">Des outils pour vous aider</h1>
-        <img src="peoples.jpg" alt="Tools" class="tools-image">
+        <img src="/images/icon/peoples.jpg" alt="Tools" class="tools-image">
     </section>
 
     <section>
         <h1 class="section-title">Une personalisation total</h1>
-        <img src="peoples.jpg" alt="Community" class="community-image">
+        <img src="/images/icon/peoples.jpg" alt="Community" class="community-image">
     </section>
 
     <footer>
-        <div class="space-beetween">
+        <div class="space-between">
             <p>© 2025 Pr0j3ct. All rights reserved.</p>
         </div>
     </footer>

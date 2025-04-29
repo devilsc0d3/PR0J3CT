@@ -2,7 +2,6 @@
     let email = '';
     let password = '';
     let error = '';
-    let success = '';
 
     /**
      * Function to handle login
@@ -10,7 +9,6 @@
     const login = async () => {
         try {
             error = '';
-            success = '';
 
             // Validate input
             if (!email || !password) {
@@ -29,7 +27,6 @@
             if (!res.ok) {
                 error = data.error || 'Erreur inconnue.';
             } else {
-                success = 'succes, redirecting to profile page...';
                 setTimeout(() => {
                     window.location.href = '/profile';
                 });
@@ -43,7 +40,7 @@
 
 <style>
     .body {
-        background: url('wallpaper3.jpg') no-repeat center center fixed;
+        background: url('/images/background/wallpaper3.jpg') no-repeat center center fixed;
         background-size: cover;
         font-family: Arial, sans-serif;
         display: flex;
@@ -126,30 +123,18 @@
         padding: 5px;
         margin-top: 1rem;
     }
-
-    .overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.2);
-        z-index: 1;
-    }
 </style>
 <div class="body">
     <div class="login-container centered-element">
         <div class="form-container">
-            <a href="/"><img src="logo.jpg" alt="Logo" style="width: 100px; height: auto; margin-bottom: 1rem;"></a>
+            <a href="/"><img src="/images/icon/p0.png" alt="Logo" style="width: 100px; height: auto; margin-bottom: 1rem;"></a>
             <h1 class="title">Login</h1>
             <form on:submit|preventDefault={login}>
                 <input id="email" type="email" name="email" placeholder="Email" bind:value={email}/>
                 <input id="password" type="password" name="password" placeholder="Password" bind:value={password}/>
-                <button type="submit">Register</button>
+                <button type="submit">Login</button>
             </form>
-
             {#if error}<p class="error">{error}</p>{/if}
-            {#if success}<p style="color:green">{success}</p>{/if}
         </div>
     </div>
 </div>

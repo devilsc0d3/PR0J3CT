@@ -2,11 +2,8 @@
     let email = '';
     let password = '';
     let error = '';
-    let success = '';
-
     const register = async () => {
         error = '';
-        success = '';
         if (!email || !password) {
             error = 'Veuillez remplir tous les champs.';
             return;
@@ -22,8 +19,6 @@
         if (!res.ok) {
             error = data.error || 'Erreur inconnue.';
         } else {
-            success = 'succes, redirecting to login page...';
-            // redirect to login page after 2 seconds
             setTimeout(() => {
                 window.location.href = '/login';
             }, 2000);
@@ -33,7 +28,7 @@
 
 <style>
     .body {
-        background: url('wallpaper3.jpg') no-repeat center center fixed;
+        background: url('/images/background/wallpaper3.jpg') no-repeat center center fixed;
         background-size: cover;
         font-family: Arial, sans-serif;
         display: flex;
@@ -131,7 +126,7 @@
     <div class="overlay"></div>
     <div class="login-container centered-element">
         <div class="form-container">
-            <img src="logo.jpg" alt="Logo" style="width: 100px; height: auto; margin-bottom: 1rem;">
+            <img src="/images/icon/p0.png" alt="Logo" style="width: 100px; height: auto; margin-bottom: 1rem;">
             <h1 class="title">Register </h1>
             <form on:submit|preventDefault={register}>
                 <input id="email" type="email" name="email" placeholder="Email" bind:value={email} />
@@ -140,7 +135,6 @@
             </form>
 
             {#if error}<p class="error">{error}</p>{/if}
-            {#if success}<p style="color:green">{success}</p>{/if}
         </div>
     </div>
 </div>

@@ -3,7 +3,6 @@
 </script>
 
 <style>
-
     section {
         position: absolute;
         top: 0;
@@ -34,7 +33,11 @@
 <section>
     <div class="container">
         <h1 class="">{page.status}</h1>
-        <p class=""> {page.error.message}</p>
-        <img src="http://localhost:5173/desesperate.jpg" alt="Error Image" class="error-image">
+        {#if page.error}
+            <p class="">{page.error.message}</p>
+        {:else}
+            <p class="">An unknown error occurred.</p>
+        {/if}
+        <img src="/images/background/desperate.jpg" alt="Desperate person" class="error-image">
     </div>
 </section>
