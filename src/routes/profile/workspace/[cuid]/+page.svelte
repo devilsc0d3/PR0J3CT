@@ -5,9 +5,6 @@
     import Modal from "$lib/Modal.svelte";
     import ModalDescription from "$lib/ModalDesciption.svelte";
 
-    onMount(() => {
-        document.body.style.overflowY = 'hidden';
-    });
 
     interface Column {
         id: string;
@@ -31,19 +28,18 @@
         updatedAt: string;
     }
 
-    let project: Project = {
+    let project: Project = $state({
         id: '',
         title: '',
         description: '',
         background: '',
         createdAt: '',
         updatedAt: ''
-    };
-    let columns: Column[] = [];
-    let tasks: Task[] = [];
-
-
+    });
+    let columns: Column[] = $state([]);
+    let tasks: Task[] = $state([]);
     const projectId = $page.params.cuid;
+
     const getProjectId = async () => {
         const response = await fetch(`/api/projects/${projectId}`);
         if (response.ok) {
@@ -53,19 +49,15 @@
         }
     };
 
-
-    onMount(async () => {
-        project = await getProjectId();
-    });
-
-
     // Fonction pour récupérer les colonnes depuis l'API
     const getColumns = async () => {
         const response = await fetch("/api/column/" + projectId);
         if (response.ok) {
-            columns = await response.json();
+            columns = (await response.json()) || [];
+            return columns;
         } else {
             console.error("Erreur lors de la récupération des colonnes");
+            return [];
         }
     };
 
@@ -74,9 +66,11 @@
     const getTasks = async () => {
         const response = await fetch("/api/tasks");
         if (response.ok) {
-            tasks = await response.json();
+            tasks = (await response.json()) || [];
+            return tasks;
         } else {
             console.error("Erreur lors de la récupération des tâches");
+            return [];
         }
     };
 
@@ -99,16 +93,16 @@
                 task.id === taskId ? { ...task, columnId: newColumnId } : task
             );
 
-            goto(`/profile/workspace/${projectId}`).then(() => {
-                // Après la redirection, forcer un rechargement de la page
-                window.location.reload();
-            });
+            // goto(`/profile/workspace/${projectId}`).then(() => {
+            //     // Après la redirection, forcer un rechargement de la page
+            //     window.location.reload();
+            // });
         } else {
             console.error("Erreur lors de la mise à jour de la tâche");
         }
     };
 
-    let name: string = '';
+    let name: string = $state('');
     const createColumn = async () => {
         if (!name) {
             console.error("Le nom de la colonne ne peut pas être vide");
@@ -126,19 +120,14 @@
         });
 
         if (response.ok) {
-            const newColumn = await response.json();
-            columns.push(newColumn);
-
-            goto(`/profile/workspace/${projectId}`).then(() => {
-                // Après la redirection, forcer un rechargement de la page
-                window.location.reload();
-            });
+            name = '';
+            columns = await getColumns();
         } else {
             console.error("Erreur lors de la création de la colonne");
         }
     };
 
-    let taskTitle: string = '';
+    let taskTitle: string = $state('');
 
     const createTask = async (event: Event, idColumn: string) => {
         event.preventDefault();
@@ -159,14 +148,8 @@
         });
 
         if (response.ok) {
-            const newTask = await response.json();
-            tasks.push(newTask);
-            taskTitle = ''; // Réinitialiser le champ de saisie
-
-            goto(`/profile/workspace/${projectId}`).then(() => {
-                // Après la redirection, forcer un rechargement de la page
-                window.location.reload();
-            });
+            taskTitle = '';
+            tasks = await getTasks();
         } else {
             console.error("Erreur lors de la création de la tâche");
         }
@@ -205,12 +188,12 @@
         target.classList.remove('dragging');
     };
 
-    let loading = true;
 
     onMount(async () => {
-        await getColumns();
-        await getTasks();
-        loading = false;
+        document.body.style.overflowY = 'hidden';
+        project = await getProjectId();
+        columns = await getColumns();
+        tasks = await getTasks();
     });
 
     const deleteColumn = async (columnId: string) => {
@@ -233,10 +216,10 @@
 
         if (response.ok) {
             tasks = tasks.filter(task => task.id !== taskId);
-            goto(`/profile/workspace/${projectId}`).then(() => {
-                // Après la redirection, forcer un rechargement de la page
-                window.location.reload();
-            });
+            // goto(`/profile/workspace/${projectId}`).then(() => {
+            //     // Après la redirection, forcer un rechargement de la page
+            //     window.location.reload();
+            // });
         } else {
             console.error("Erreur lors de la suppression de la tâche");
         }
@@ -258,10 +241,10 @@
             columns = columns.map(column =>
                 column.id === columnId ? { ...column, name: updatedColumn.name } : column
             );
-            goto(`/profile/workspace/${projectId}`).then(() => {
-                // Après la redirection, forcer un rechargement de la page
-                window.location.reload();
-            });
+            // goto(`/profile/workspace/${projectId}`).then(() => {
+            //     // Après la redirection, forcer un rechargement de la page
+            //     window.location.reload();
+            // });
         } else {
             console.error("Erreur lors de la mise à jour du nom de la colonne");
         }
@@ -277,7 +260,7 @@
     };
 
     // modal description
-    let showModalDescription = false;
+    let showModalDescription = $state(false);
     const openModalDescription = () => {
         showModalDescription = true;
     };
@@ -311,8 +294,8 @@
         border-radius: 8px;
         padding: 16px;
         margin: 10px;
-        width: 100px;
-        height: 90%;
+        width: 200px;
+        max-height: 70vh;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         backdrop-filter: blur(8px);
         background: rgba(0,0,0,0.5);
@@ -320,7 +303,9 @@
     }
 
     .task {
-        background-color: #fff;
+        width: 150px;
+        height: auto;
+        background-color: #ffffff;
         border-radius: 4px;
         padding: 12px;
         margin: 8px 0;
@@ -332,13 +317,14 @@
     .task h3 {
         font-size: 1.2em;
         margin: 0;
+        width: 100px;
     }
 
     .body {
 
         background-size: cover;
         min-height: 100vh;
-        width: clamp(100%, 100rem, 100rem);
+        /*width: clamp(100%, 100rem, 100rem);*/
         margin: 0;
     }
 
@@ -388,6 +374,8 @@
         text-align: center;
         display: block;
     }
+
+
 </style>
 <div class="body" style={project.background?.startsWith('http')? `background-image: url('${project.background}')`: `background-color: ${project.background}`}>
 
@@ -399,11 +387,6 @@
             <img class="icon" src="/images/icon/filter.svg" alt="filter" />
         </div>
     </header>
-    {#if loading}
-        <div class="center-block">
-            <p>Chargement...</p>
-        </div>
-    {:else}
         <div class="board">
             {#each columns as column (column.id)}
                 <section class="column" on:dragover={onDragOver} on:drop={(event) => onDrop(event, column.id)}>
@@ -438,7 +421,6 @@
                 </form>
             </section>
         </div>
-    {/if}
 </div>
 
 <Modal bind:showModal onClose={closeModal}>

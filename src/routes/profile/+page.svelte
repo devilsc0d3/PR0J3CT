@@ -3,7 +3,7 @@
     import {onMount} from "svelte";
     import Modal from "$lib/Modal.svelte";
 
-    let showModal = false;
+    let showModal = $state(false);
 
     const openModal = () => {
         showModal = true;
@@ -53,7 +53,7 @@
         }
     };
 
-    let projects: Project[] = [];
+    let projects: Project[] = $state([]);
 
     onMount(async () => {
         document.body.style.overflowY = 'auto';
@@ -61,14 +61,15 @@
     });
 
 
-    export let data;
+    // export let data;
     let title = '';
     let description = '';
     let background = '#ffffff';
     let success = '';
 
-    const user = data.user;
-    const id_user = user?.id;
+    // const user = data.user;
+    // const id_user = user?.id;
+    const id_user = "cm9v1cfl80000mdygfb6t8lmk";
     /**
      * Creates a new project using the API.
      * @returns {Promise<void>}
@@ -107,7 +108,6 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 1rem;
         background: url('/images/background/header2.jpg') no-repeat center center;
         background-size: cover;
         height: 80px;
@@ -154,10 +154,7 @@
         height: 80px;
         background-color: rgba(0, 0, 0, 0.7);
         z-index: 1;
-        padding: 1rem;
-
     }
-
 
     h1 {
         margin-bottom: 1rem;
@@ -166,22 +163,41 @@
     ul {
         list-style-type: none;
         padding: 0;
+        margin: 0;
     }
 
     li {
-        margin-bottom: 1rem;
+        margin: 1rem;
         width: 400px;
     }
 
     .card {
         width: clamp(250px, 50vw, 400px);
-        height: 100px;
+        height: 150px;
         border: 1px solid #ced4da;
         border-radius: 0.25rem;
-        padding: 1rem;
         background-position: center;
         background-size: cover;
-        margin: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+    }
+
+    .overlay2 {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        top : -56px;
+        left: -80px;
+        background-color: rgba(0, 0, 0, 0.5);
+        border-radius: 0.25rem;
+        margin: 10px 50px 10px 80px;
+        z-index: 1;
+    }
+
+    a .card {
+        margin: auto;
     }
 
     .card h2 {
@@ -229,19 +245,6 @@
         height: 100%;
     }
 
-    .overlay2 {
-        position: relative;
-        width: 100%;
-        height: 100%;
-        top : -73px;
-        left: -26px;
-        background-color: rgba(0, 0, 0, 0.5);
-        border-radius: 0.25rem;
-        margin: 10px;
-        padding: 1rem;
-        z-index: 1;
-    }
-
     .test1 {
         position: relative;
         z-index: 2;
@@ -256,10 +259,16 @@
     .second-ground {
         z-index: 2;
     }
+
+    .marge-50 {
+        margin: 50px;
+    }
+
+
 </style>
 
 <header>
-    <a href="/" class="second-ground"><img src="/images/icon/logo.jpg" style="width: 80px" alt="logo"></a>
+    <a href="/" class="second-ground"><img src="/images/icon/p0.png" style="width: 80px" alt="logo"></a>
     <h1>Profile</h1>
     <nav>
         <a href="/profile" class="active">workspaces</a>
@@ -273,18 +282,17 @@
     <ul>
         {#each projects as project}
             <li>
-                <a href={`/profile/workspace/${project.id}`}>
+                <a href={`/profile/workspace/${project.id}`} class="marge-50">
                     <div class="card" style={project.background?.startsWith('http')? `background-image: url('${project.background}')`: `background-color: ${project.background}`}>
-                            <h2 class="test1">{project.title}</h2>
-                            <div class="overlay2"></div>
-                        </div>
+                        <h2 class="test1">{project.title}</h2>
+                    </div>
                 </a>
             </li>
         {/each}
     </ul>
 
     <button on:click={openModal} class="new">
-        <img src="create.svg" alt="Create Project" style="width: 70px; height: 70px;">
+        <img src="/images/icon/create.svg" alt="Create Project" style="width: 70px; height: 70px;">
     </button>
 
 </main>
