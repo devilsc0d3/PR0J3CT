@@ -3,6 +3,9 @@
     import {onMount} from "svelte";
     import Modal from "$lib/Modal.svelte";
 
+    import {get} from "svelte/store";
+    const { data } = $props();
+
     let showModal = $state(false);
 
     const openModal = () => {
@@ -67,9 +70,9 @@
     let background = '#ffffff';
     let success = '';
 
-    // const user = data.user;
-    // const id_user = user?.id;
-    const id_user = "cm9v1cfl80000mdygfb6t8lmk";
+    const user = data.user;
+    const id_user = user?.id;
+    // const id_user = "cm9v1cfl80000mdygfb6t8lmk";
     /**
      * Creates a new project using the API.
      * @returns {Promise<void>}
@@ -101,6 +104,20 @@
             success = 'Failed to create project';
         }
     };
+
+    function deleteProject(id: string) {
+        fetch('/api/projects/' + id, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' }
+        })
+            .then((response) => {
+                if (response.ok) {
+                    projects = projects.filter((project) => project.id !== id);
+                } else {
+                    console.error('Failed to delete project');
+                }
+            });
+    }
 </script>
 
 <style>
@@ -264,6 +281,9 @@
         margin: 50px;
     }
 
+    .first {
+        z-index: 80;
+    }
 
 </style>
 
@@ -285,6 +305,7 @@
                 <a href={`/profile/workspace/${project.id}`} class="marge-50">
                     <div class="card" style={project.background?.startsWith('http')? `background-image: url('${project.background}')`: `background-color: ${project.background}`}>
                         <h2 class="test1">{project.title}</h2>
+                        <img src="/images/icon/delete.svg" alt="Supprimer" class="icon first" style="width: 25px; background-color: white" on:click={() => deleteProject(project.id)} />
                     </div>
                 </a>
             </li>

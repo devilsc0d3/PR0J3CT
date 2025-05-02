@@ -250,9 +250,32 @@
         }
     };
 
+
+    const getTaskById = async (taskId: string) => {
+        const response = await fetch(`/api/tasks/${taskId}`);
+        if (response.ok) {
+            return await response.json();
+        } else {
+            console.error("Erreur lors de la récupération de la tâche");
+            return null;
+        }
+    };
     // modal
-    let showModal = false;
-    const openModal = () => {
+    let showModal = $state(false);
+    let TaskIds = $state('');
+    let task = $state<Task>({
+        id: '',
+        title: '',
+        content: '',
+        columnId: ''
+    });
+    const openModal = async (TaskId: string) => {
+        console.log(TaskId);
+        task = await getTaskById(TaskId); // Await the result of the async function
+        TaskIds = TaskId;
+
+        console.log(task.title);
+
         showModal = true;
     };
     const closeModal = () => {
@@ -300,6 +323,8 @@
         backdrop-filter: blur(8px);
         background: rgba(0,0,0,0.5);
         transition: background-color 0.3s;
+        overflow-y: scroll;
+        overflow-x: hidden;
     }
 
     .task {
@@ -312,7 +337,7 @@
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         cursor: grab;
         transition: transform 0.1s ease-in-out;
-    }
+       }
 
     .task h3 {
         font-size: 1.2em;
@@ -397,8 +422,8 @@
 
                     <div class="tasks">
                         {#each getTasksForColumn(column.id) as task (task.id)}
-                            <button on:click={openModal}>
-                            <div class="task" role="button" draggable="true" on:dragstart={(event) => onDragStart(event, task.id, task.columnId)} on:dragend={onDragEnd}>
+                            <button on:click={() => openModal(task.id)}>
+                                <div class="task" role="button" draggable="true" on:dragstart={(event) => onDragStart(event, task.id, task.columnId)} on:dragend={onDragEnd}>
                                 <div class="space-between">
                                     <h3>{task.title}</h3>
                                     <img src="/images/icon/delete.svg" alt="Supprimer" class="icon-black" on:click={() => deleteTask(task.id)} />
@@ -425,8 +450,8 @@
 
 <Modal bind:showModal onClose={closeModal}>
     <div class="center">
-        <h1>azerty</h1>
-        <textarea></textarea>
+        <h1>{task.title}</h1>
+        <textarea>{task.content}</textarea>
     </div>
 </Modal>
 <ModalDescription bind:showModalDescription onClose={closeModalDescription}>

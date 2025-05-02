@@ -7,7 +7,8 @@ const prisma = new PrismaClient();
 /**
  * @description get project by id on path /api/projects/[cuid]
  * @param request
- * @constructor
+ * @param params
+ * @returns {Promise<{status: number, body: {error: string}}|{status: number, body: {project: any}}>}
  */
 export const GET: RequestHandler = async ({ params }) => {
     const { cuid } = params;
@@ -22,5 +23,25 @@ export const GET: RequestHandler = async ({ params }) => {
         return json(project);
     } catch (error) {
         return json({ error: 'Error fetching project' }, { status: 500 });
+    }
+}
+
+/**
+ * @description delete project by id on path /api/projects/[cuid]
+ * @param request
+ * @returns {Promise<{status: number, body: {error: string}}|{status: number, body: {project: any}}>}
+ *
+ */
+export const DELETE: RequestHandler = async ({ params }) => {
+    const { cuid } = params;
+
+    try {
+        const project = await prisma.projects.delete({
+            where: { id: cuid },
+        });
+        return json(project);
+    } catch (error) {
+        console.log(error);
+        return json({ error: 'Error deleting project' }, { status: 500 });
     }
 }

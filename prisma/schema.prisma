@@ -21,7 +21,8 @@ model Users {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  projet projects[]
+  projet    projects[]
+  favorites favorites[]
 }
 
 model projects {
@@ -38,6 +39,9 @@ model projects {
   column column[]
 
   tags_pref tags_pref[]
+  memberS   members?    @relation(fields: [memberSId], references: [id])
+  memberSId String?
+  favorites favorites[]
 }
 
 model column {
@@ -87,4 +91,27 @@ model tags {
   task      tasks     @relation(fields: [id_task], references: [id])
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+}
+
+model members {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  role      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  id_projet String
+  projet    projects[]
+}
+
+model favorites {
+  id         String   @id @default(cuid())
+  id_user    String   @unique
+  id_project String   @unique
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  user    Users    @relation(fields: [id_user], references: [id])
+  project projects @relation(fields: [id_project], references: [id])
 }

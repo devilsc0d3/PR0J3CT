@@ -132,8 +132,6 @@ You can preview the production build with `npm run preview`.
 ---
 layout server
 layout nabvar
-hook cookie
-props
 
 ---
 
