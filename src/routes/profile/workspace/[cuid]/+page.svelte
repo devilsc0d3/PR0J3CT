@@ -4,6 +4,7 @@
     import {page} from '$app/stores';
     import Modal from "$lib/Modal.svelte";
     import ModalDescription from "$lib/ModalDesciption.svelte";
+    import ModalInvite from "$lib/ModalInvite.svelte";
 
 
     interface Column {
@@ -290,9 +291,35 @@
     const closeModalDescription = () => {
         showModalDescription = false;
     };
+
+    // modal invite
+    let showModalInvite = $state(false);
+    const openModalInvite = () => {
+        showModalInvite = true;
+    };
+    const closeModalInvite = () => {
+        showModalInvite = false;
+    };
+    let email: string = $state('');
+
 </script>
 
 <style>
+
+    :root {
+        --primary: #4f46e5;
+        --background-dark: rgba(30, 30, 30, 0.8);
+        --white: #ffffff;
+        --glass: rgba(0, 0, 0, 0.5);
+        --border-radius: 12px;
+        --transition: 0.3s ease;
+        --box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    }
+
+    input, button, textarea {
+        font-family: 'Segoe UI', sans-serif;
+    }
+
     .header {
         color : #ffffff;
         position: fixed;
@@ -303,47 +330,60 @@
         width: clamp(300px, 50vw, 400px);
         background-color: rgba(0,0,0,0.5);
         backdrop-filter: blur(8px);
-
         padding: 10px;
     }
 
     .board {
         display: flex;
-        justify-content: start;
+        padding: 20px 20px;
+        gap: 20px;
+        overflow-x: auto;
+        align-items: flex-start;
+        height: calc(100vh - 40px);
     }
 
     .column {
-        flex: 1;
-        border-radius: 8px;
+        flex: 0 0 250px;
+        max-height: 75vh;
+        border-radius: var(--border-radius);
         padding: 16px;
-        margin: 10px;
-        width: 200px;
-        max-height: 70vh;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        backdrop-filter: blur(8px);
-        background: rgba(0,0,0,0.5);
-        transition: background-color 0.3s;
-        overflow-y: scroll;
-        overflow-x: hidden;
+        background: var(--glass);
+        backdrop-filter: blur(12px);
+        box-shadow: var(--box-shadow);
+        min-height: 100px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        overflow-y: auto;
     }
 
     .task {
-        width: 150px;
-        height: auto;
-        background-color: #ffffff;
-        border-radius: 4px;
-        padding: 12px;
-        margin: 8px 0;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        background: #fff;
+        width: 180px;
+        margin: 5px;
+        padding: 10px 14px;
+        border-radius: var(--border-radius);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        transition: transform var(--transition);
         cursor: grab;
-        transition: transform 0.1s ease-in-out;
-       }
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 
     .task h3 {
-        font-size: 1.2em;
         margin: 0;
-        width: 100px;
+        font-size: 1rem;
+        color: #333;
+        word-break: break-word;
+        max-width: 120px;
     }
+
+    .task:hover {
+        transform: scale(1.02);
+    }
+
+
 
     .body {
 
@@ -401,14 +441,25 @@
     }
 
 
+    input[type="text"] {
+        padding: 8px;
+        border-radius: var(--border-radius);
+        border: 1px solid #ccc;
+        background-color: rgba(255, 255, 255, 0.8);
+        color: #333;
+    }
+
+    .color-white {
+        color: #ffffff;
+    }
 </style>
-<div class="body" style={project.background?.startsWith('http')? `background-image: url('${project.background}')`: `background-color: ${project.background}`}>
+<div class="body" style={project.background?.startsWith('http')? `background-image: url('${project.background}')`: `background: ${project.background}`}>
 
     <header class="header">
         <div class="space-between">
             <a href="/profile"><img class="icon" src="/images/icon/workspace.svg" alt="Workspace" /></a>
             <button on:click={openModalDescription} class="new"><img class="icon" src="/images/icon/description.svg" alt="description" /></button>
-            <img class="icon" src="/images/icon/share.svg" alt="share" />
+            <button on:click={openModalInvite} class="new"><img class="icon" src="/images/icon/share.svg" alt="share" /></button>
             <img class="icon" src="/images/icon/filter.svg" alt="filter" />
         </div>
     </header>
@@ -426,7 +477,6 @@
                                 <div class="task" role="button" draggable="true" on:dragstart={(event) => onDragStart(event, task.id, task.columnId)} on:dragend={onDragEnd}>
                                 <div class="space-between">
                                     <h3>{task.title}</h3>
-                                    <img src="/images/icon/delete.svg" alt="Supprimer" class="icon-black" on:click={() => deleteTask(task.id)} />
                                 </div>
                             </div>
                             </button>
@@ -435,14 +485,14 @@
                     <form on:submit|preventDefault={(event) => createTask(event, column.id)}>
                         <input type="hidden" name="columnId" value={column.id} />
                         <input type="text" placeholder="Nouvelle tâche" name="title" bind:value={taskTitle} />
-                        <button type="submit">Ajouter</button>
+                        <button type="submit" class="color-white">Ajouter</button>
                     </form>
                 </section>
             {/each}
             <section class="column">
                 <form on:submit|preventDefault={createColumn}>
                     <input type="text" placeholder="Nom de la colonne" name="name" bind:value={name} />
-                    <button type="submit">Ajouter</button>
+                    <button type="submit" class="color-white">Ajouter</button>
                 </form>
             </section>
         </div>
@@ -452,6 +502,16 @@
     <div class="center">
         <h1>{task.title}</h1>
         <textarea>{task.content}</textarea>
+        <img
+                src="/images/icon/delete.svg"
+                alt="Supprimer"
+                class="icon"
+                on:click={() => {
+        deleteTask(task.id);
+        showModal = false;
+    }}
+        />
+
     </div>
 </Modal>
 <ModalDescription bind:showModalDescription onClose={closeModalDescription}>
@@ -460,3 +520,11 @@
         <p>{project.description}</p>
     </div>
 </ModalDescription>
+<ModalInvite bind:showModalInvite onClose={closeModalInvite} closeModalInvite={closeModalInvite}>
+    <div class="center-block br-50px blue">
+        <h1>Inviter un membre</h1><br>
+        <p>Entrez l'adresse e-mail de la personne que vous souhaitez inviter à rejoindre votre projet.</p>
+        <input type="email" placeholder="Adresse e-mail" bind:value={email} />
+        <button>Inviter</button>
+    </div>
+</ModalInvite>

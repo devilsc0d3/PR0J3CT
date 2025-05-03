@@ -10,7 +10,6 @@
 <div class="modal-backdrop" on:click={closeModal} style:display={showModal ? 'block' : 'none'}>
     <div class="modal-content" on:click|stopPropagation>
         <slot></slot>
-        <button on:click={closeModal}>Close</button>
     </div>
 </div>
 
