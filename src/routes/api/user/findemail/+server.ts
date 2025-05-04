@@ -13,11 +13,11 @@ export const POST: RequestHandler = async ({ request }) => {
             where: { email },
         });
 
-        if (user) {
-            return json({ message: 'Email already exists' }, { status: 400 });
-        }
+        // if (user) {
+        //     return json({ message: 'Email already exists' }, { status: 400 });
+        // }
 
-        return json({ message: 'Email is available' });
+        return json({ message: 'Email is available', user: user });
     } catch (error) {
         return json({ error: 'Error checking email availability' }, { status: 500 });
     }

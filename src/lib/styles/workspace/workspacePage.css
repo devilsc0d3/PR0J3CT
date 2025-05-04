@@ -1,0 +1,140 @@
+:root {
+    --primary: #4f46e5;
+    --background-dark: rgba(30, 30, 30, 0.8);
+    --white: #ffffff;
+    --glass: rgba(0, 0, 0, 0.5);
+    --border-radius: 12px;
+    --transition: 0.3s ease;
+    --box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+input, button, textarea {
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.header {
+    color : #ffffff;
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 20px;
+    width: clamp(300px, 50vw, 400px);
+    background-color: rgba(0,0,0,0.5);
+    backdrop-filter: blur(8px);
+    padding: 10px;
+}
+
+.board {
+    display: flex;
+    padding: 20px 20px;
+    gap: 20px;
+    overflow-x: auto;
+    align-items: flex-start;
+    height: calc(100vh - 40px);
+}
+
+.column {
+    flex: 0 0 250px;
+    max-height: 75vh;
+    border-radius: var(--border-radius);
+    padding: 16px;
+    background: var(--glass);
+    backdrop-filter: blur(12px);
+    box-shadow: var(--box-shadow);
+    min-height: 100px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow-y: auto;
+}
+
+.task {
+    background: #fff;
+    width: 180px;
+    margin: 5px;
+    padding: 10px 14px;
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: transform var(--transition);
+    cursor: grab;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.task h3 {
+    margin: 0;
+    font-size: 1rem;
+    color: #333;
+    word-break: break-word;
+    max-width: 120px;
+}
+
+.task:hover {
+    transform: scale(1.02);
+}
+
+
+
+.body {
+
+    background-size: cover;
+    min-height: 100vh;
+    /*width: clamp(100%, 100rem, 100rem);*/
+    margin: 0;
+}
+
+.icon {
+    width: 35px;
+    height: 35px;
+    margin: 0;
+    filter: invert(1) sepia(1) saturate(5) hue-rotate(200deg);
+}
+
+.icon:active {
+    transform: scale(0.9);
+    transition: transform 0.2s;
+}
+
+.icon:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
+}
+
+.icon:hover {
+    transform: scale(1.3);
+    transition: transform 0.2s;
+}
+
+.space-between {
+    padding: 10px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: 0 20px;
+}
+
+button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.center-block {
+    text-align: center;
+    display: block;
+}
+
+
+input[type="text"] {
+    padding: 8px;
+    border-radius: var(--border-radius);
+    border: 1px solid #ccc;
+    background-color: rgba(255, 255, 255, 0.8);
+    color: #333;
+}
+
+.color-white {
+    color: #ffffff;
+}

@@ -40,7 +40,8 @@
     }
 </style>
 
-<div id="background" class="overlay2 modal-backdrop" on:click={closeModalInvite} style:display={showModalInvite ? 'block' : 'none'}>
+<div id="background" class="overlay2 modal-backdrop" style:display={showModalInvite ? 'block' : 'none'}>
+<!--<div id="background" class="overlay2 modal-backdrop" on:click={closeModalInvite} style:display={showModalInvite ? 'block' : 'none'}>-->
     <div class="center modal">
         <slot></slot>
     </div>

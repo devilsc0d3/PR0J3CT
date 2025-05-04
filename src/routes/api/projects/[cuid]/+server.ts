@@ -30,7 +30,6 @@ export const GET: RequestHandler = async ({ params }) => {
  * @description delete project by id on path /api/projects/[cuid]
  * @param request
  * @returns {Promise<{status: number, body: {error: string}}|{status: number, body: {project: any}}>}
- *
  */
 export const DELETE: RequestHandler = async ({ params }) => {
     const { cuid } = params;

@@ -7,7 +7,8 @@ const prisma = new PrismaClient();
 /**
  * @description get project by id on path /api/projects/[id-user]
  * @param request
- * @constructor
+ * @param params
+ * @returns {Promise<{status: number, body: {error: string}}|{status: number, body: {project: any}}>}
  */
 export const GET: RequestHandler = async ({ params }) => {
     const {id} = params;
@@ -17,7 +18,7 @@ export const GET: RequestHandler = async ({ params }) => {
             where: {userId: id},
         });
         if (!project) {
-            return json({error: 'Project not found'}, {status: 404});
+            return json([]);
         }
         return json(project);
     } catch (error) {

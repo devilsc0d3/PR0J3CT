@@ -118,7 +118,7 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: rgba(0, 0, 0, 0.2);
+        background-color: rgba(0, 0, 0, 0.1);
         z-index: 1;
     }
 </style>
@@ -126,15 +126,15 @@
     <div class="overlay"></div>
     <div class="login-container centered-element">
         <div class="form-container">
-            <img src="/images/icon/p0.png" alt="Logo" style="width: 100px; height: auto; margin-bottom: 1rem;">
+            <a href="/"><img src="/images/icon/p01.png" alt="Logo" style="width: 100px; height: auto; margin-bottom: 1rem;"></a>
             <h1 class="title">Register </h1>
             <form on:submit|preventDefault={register}>
                 <input id="email" type="email" name="email" placeholder="Email" bind:value={email} />
                 <input id="password" type="password" name="password" placeholder="Password" bind:value={password} />
                 <button type="submit">Register</button>
             </form>
-
             {#if error}<p class="error">{error}</p>{/if}
+            <p>Already have an account? <a href="/login">Login</a></p>
         </div>
     </div>
 </div>

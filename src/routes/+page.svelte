@@ -6,153 +6,10 @@
     });
 </script>
 
-<style>
-
-    .body {
-        background-color: #ffffff;
-    }
-
-    a {
-        text-decoration: none;
-    }
-
-    .overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100vh;
-        background-color: rgba(0, 0, 0, 0.4);
-        z-index: 1;
-    }
-
-    .title {
-        color: #fdbd2d;
-        font-weight: bold;
-
-        /*font-size: 120px;*/
-        font-size: clamp(50px, 10vw, 120px);
-
-        position: absolute;
-        top: 10%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-    }
-
-    .description {
-        width: 100%;
-        text-align: center;
-        color: #ffffff;
-        font-weight: bold;
-        font-size: clamp(30px, 8vw, 80px);
-        position: absolute;
-        top: 30%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-    }
-
-
-    .main-content {
-        display: flex;
-        justify-content: space-between;
-        background: url('/images/background/wallpaper4.jpg') no-repeat fixed center;
-        background-size: cover;
-        align-items: center;
-        height: 100vh;
-    }
-
-    .title-section {
-        width: 100%;
-        height: 100%;
-        z-index: 2;
-    }
-
-    .wave-container {
-        position: absolute;
-        bottom: 0;
-        margin: 0;
-        padding: 0;
-        left: 0;
-        width: 100%;
-        height: 200px;
-        z-index: 2;
-    }
-
-    img {
-        width: clamp(80px, 30%, 500px);
-        margin: 0 auto;
-        display: block;
-    }
-
-    .section-title {
-        text-align: center;
-        font-size: 2.5em;
-        margin: 20px 0;
-        color: #1d442f;
-    }
-
-    /*button 2 */
-
-    .button {
-        height: 50px;
-        width: 200px;
-        position: relative;
-        background-color: transparent;
-        cursor: pointer;
-        border: 2px solid #ffffff;
-        overflow: hidden;
-        border-radius: 30px;
-        color: #ffffff;
-        transition: all 0.5s ease-in-out;
-    }
-
-    .btn-txt {
-        z-index: 1;
-        font-weight: 800;
-        letter-spacing: 4px;
-    }
-
-    .type1::after {
-        content: "";
-        position: absolute;
-        left: 0;
-        top: 0;
-        transition: all 0.5s ease-in-out;
-        background-color: #ffffff;
-        border-radius: 30px;
-        visibility: hidden;
-        height: 10px;
-        width: 10px;
-        z-index: -1;
-    }
-
-    .button:hover {
-        box-shadow: 1px 1px 200px #ffffff;
-        color: #000000;
-        border: none;
-    }
-
-    .type1:hover::after {
-        visibility: visible;
-        transform: scale(100) translateX(2px);
-    }
-
-    .center-pos {
-        position: absolute;
-        top: 60%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-    }
-    .space-between {
-        display: flex;
-        justify-content: space-between;
-        width: 100%;
-        max-width: 500px;
-    }
-</style>
+<link rel="stylesheet" href="/src/lib/styles/home/homePage.css">
 
 <div class="body">
-    <!-- Main Content -->
+    <!-- header -->
     <section class="main-content">
         <div class="overlay"></div>
         <div class="title-section">
@@ -179,7 +36,7 @@
         </div>
     </section>
 
-    <!--    // presentation-->
+    <!-- presentation -->
     <section>
         <h1 class="section-title">Des projects sans limite !</h1>
         <img src="/images/icon/peoples.jpg" alt="People working together" class="people-image">

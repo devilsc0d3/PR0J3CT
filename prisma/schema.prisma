@@ -23,6 +23,7 @@ model Users {
 
   projet    projects[]
   favorites favorites[]
+  members   members[]
 }
 
 model projects {
@@ -39,9 +40,9 @@ model projects {
   column column[]
 
   tags_pref tags_pref[]
-  memberS   members?    @relation(fields: [memberSId], references: [id])
   memberSId String?
   favorites favorites[]
+  members   members?
 }
 
 model column {
@@ -96,13 +97,15 @@ model tags {
 model members {
   id        String   @id @default(cuid())
   email     String   @unique
-  name      String?
   role      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  id_projet String
-  projet    projects[]
+  id_user   String @unique
+  id_projet String @unique
+
+  user   Users    @relation(fields: [id_user], references: [id])
+  projet projects @relation(fields: [id_projet], references: [id])
 }
 
 model favorites {
