@@ -172,30 +172,13 @@
 
 <link rel="stylesheet" href="/src/lib/styles/profile/profilePage.css">
 
-<header>
-    <a href="/" class="second-ground"><img src="/images/icon/p02.png" style="width: 80px; margin: 20px;" alt="logo"></a>
-    <h1>Profile</h1>
-    <input type="checkbox" id="menu-toggle" class="menu-toggle">
-    <label for="menu-toggle" class="hamburger">
-        <span></span>
-        <span></span>
-        <span></span>
-    </label>
-    <nav class="nav-menu">
-        <a href="/profile">Workspaces</a>
-        <a href="/profile/setting">Settings</a>
-        <button onclick={logout}>Logout</button>
-    </nav>
-
-    <div class="overlay"></div>
-</header>
 <main>
     <h1>My Pr0j3cts</h1>
     <ul>
         {#each projects as project}
             <li>
                 <div>
-                    <a href={`/profile/workspace/${project.id}`} class="marge-50">
+                    <a href={`/workspace/${project.id}`} class="marge-50">
                         <div class="card" style={project.background?.startsWith('http')? `background-image: url('${project.background}')`: `background : ${project.background}`}>
                             <h2 class="test1">{project.title}</h2>
                             <div class="overlay2"></div>
@@ -217,7 +200,7 @@
     {#each projectsMember as project}
         <li>
             <div>
-                <a href={`/profile/workspace/${project.id}`} class="marge-50">
+                <a href={`/workspace/${project.id}`} class="marge-50">
                     <div class="card" style={project.background?.startsWith('http')? `background-image: url('${project.background}')`: `background : ${project.background}`}>
                         <h2 class="test1">{project.title}</h2>
                         <div class="overlay2"></div>

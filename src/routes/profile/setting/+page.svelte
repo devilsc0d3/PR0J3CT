@@ -15,22 +15,6 @@
 
 <link rel="stylesheet" type="text/css" href="/src/lib/styles/setting/settingPage.css">
 
-<header>
-    <a href="/"><img src="/images/icon/p02.png" style="width: 80px; margin: 20px;" alt="logo"></a>
-    <h1>Profile</h1>
-    <input type="checkbox" id="menu-toggle" class="menu-toggle">
-    <label for="menu-toggle" class="hamburger">
-        <span></span>
-        <span></span>
-        <span></span>
-    </label>
-    <nav class="nav-menu">
-        <a href="/profile">Workspaces</a>
-        <a href="/profile/setting">Settings</a>
-        <button onclick={logout}>Logout</button>
-    </nav>
-    <div class="overlay"></div>
-</header>
 <main>
     <h1>Setting</h1>
     <ul>

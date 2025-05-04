@@ -5,6 +5,15 @@
     import ModalDescription from "$lib/ModalDesciption.svelte";
     import ModalInvite from "$lib/ModalInvite.svelte";
 
+    interface Project {
+        id: string;
+        title: string;
+        description: string;
+        background: string;
+        createdAt: string;
+        updatedAt: string;
+    }
+
     interface Column {
         id: string;
         name: string;
@@ -18,16 +27,7 @@
         columnId: string;
     }
 
-    interface Project {
-        id: string;
-        title: string;
-        description: string;
-        background: string;
-        createdAt: string;
-        updatedAt: string;
-    }
-
-    let project: Project = $state({
+    let project: Project = $state( {
         id: '',
         title: '',
         description: '',
@@ -35,10 +35,59 @@
         createdAt: '',
         updatedAt: ''
     });
-    let columns: Column[] = $state([]);
-    let tasks: Task[] = $state([]);
+
+    let task = $state<Task>({
+        id: '',
+        title: '',
+        content: '',
+        columnId: ''
+    });
+
     const projectId = $page.params.cuid;
 
+    let columns: Column[] = $state([]);
+    let tasks: Task[] = $state([]);
+
+    let taskTitle: string = $state('');
+    let email: string = $state('');
+    let name: string = $state('');
+
+    //modal task
+    let showModal = $state(false);
+    const openModal = async (TaskId: string) => {
+        task = await getTaskById(TaskId);
+        showModal = true;
+    };
+    const closeModal = () => {
+        showModal = false;
+    };
+
+    // modal description
+    let showModalDescription = $state(false);
+    const openModalDescription = () => {
+        showModalDescription = true;
+    };
+    const closeModalDescription = () => {
+        showModalDescription = false;
+    };
+
+    // modal invite
+    let showModalInvite = $state(false);
+    const openModalInvite = () => {
+        showModalInvite = true;
+    };
+    const closeModalInvite = () => {
+        showModalInvite = false;
+    };
+
+    onMount(async () => {
+        document.body.style.overflowY = 'hidden';
+        project = await getProjectId();
+        columns = await getColumns();
+        tasks = await getTasks();
+    });
+
+    // Fonction pour récupérer les infos du projet depuis l'API
     const getProjectId = async () => {
         const response = await fetch(`/api/projects/${projectId}`);
         if (response.ok) {
@@ -59,7 +108,6 @@
             return [];
         }
     };
-
 
     // Fonction pour récupérer les tâches depuis l'API
     const getTasks = async () => {
@@ -90,13 +138,12 @@
             tasks = tasks.map(task =>
                 task.id === taskId ? { ...task, columnId: newColumnId } : task
             );
-
         } else {
             console.error("Erreur lors de la mise à jour de la tâche");
         }
     };
 
-    let name: string = $state('');
+    // Fonction pour créer une nouvelle colonne via l'API
     const createColumn = async () => {
         if (!name) {
             console.error("Le nom de la colonne ne peut pas être vide");
@@ -121,8 +168,34 @@
         }
     };
 
-    let taskTitle: string = $state('');
+    // Fonction pour supprimer une colonne via l'API
+    const deleteColumn = async (columnId: string) => {
+        const response = await fetch(`/api/column/${columnId}`, {
+            method: 'DELETE',
+        });
 
+        if (response.ok) {
+            columns = columns.filter(column => column.id !== columnId);
+            tasks = tasks.filter(task => task.columnId !== columnId);
+        } else {
+            console.error("Erreur lors de la suppression de la colonne");
+        }
+    };
+
+    // Fonction pour supprimer une tâche via l'API
+    const deleteTask = async (taskId: string) => {
+        const response = await fetch(`/api/tasks/${taskId}`, {
+            method: 'DELETE',
+        });
+
+        if (response.ok) {
+            tasks = tasks.filter(task => task.id !== taskId);
+        } else {
+            console.error("Erreur lors de la suppression de la tâche");
+        }
+    };
+
+    // Fonction pour créer une nouvelle tâche via l'API
     const createTask = async (event: Event, idColumn: string) => {
         event.preventDefault();
         if (!taskTitle) {
@@ -137,7 +210,7 @@
             body: JSON.stringify({
                 title: taskTitle,
                 content: '',
-                columnId: idColumn, // Assigner à la première colonne par défaut
+                columnId: idColumn,
             }),
         });
 
@@ -155,6 +228,80 @@
         return tasks.filter(task => task.columnId === columnId);
     };
 
+    // Fonction pour mettre à jour le nom de la colonne via l'API
+    const updateColumnName = async (columnId: string, newName: string) => {
+        const response = await fetch(`/api/column/${columnId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                name: newName,
+            }),
+        });
+
+        if (response.ok) {
+            const updatedColumn = await response.json();
+            columns = columns.map(column =>
+                column.id === columnId ? { ...column, name: updatedColumn.name } : column
+            );
+        } else {
+            console.error("Erreur lors de la mise à jour du nom de la colonne");
+        }
+    };
+
+    // Fonction pour récupérer une tâche par son ID
+    const getTaskById = async (taskId: string) => {
+        const response = await fetch(`/api/tasks/${taskId}`);
+        if (response.ok) {
+            return await response.json();
+        } else {
+            console.error("Erreur lors de la récupération de la tâche");
+            return null;
+        }
+    };
+
+    // fonction pour inviter un membre
+    const inviteMember = async (email : string) => {
+        // check email
+        const responseUser = await fetch("/api/user/findemail", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email,
+            }),
+        });
+
+        if (!responseUser.ok) {
+            console.error("Erreur lors de la vérification de l'email");
+            return;
+        }
+
+        // add member
+        const user = await responseUser.json();
+        const response = await fetch("/api/members", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: email,
+                id_projet: projectId,
+                role: 'member',
+                id_user: user.user.id
+            }),
+        });
+        if (response.ok) {
+            email = '';
+            showModalInvite = false;
+        } else {
+            console.error("Erreur lors de l'invitation du membre");
+        }
+    };
+
+    // Drag and drop functionality
     const onDragStart = (event: DragEvent, taskId: string, columnId: string) => {
         draggedTaskId = taskId;
         draggedColumnId = columnId;
@@ -181,162 +328,10 @@
         const target = event.target as HTMLElement;
         target.classList.remove('dragging');
     };
-
-
-    onMount(async () => {
-        document.body.style.overflowY = 'hidden';
-        project = await getProjectId();
-        columns = await getColumns();
-        tasks = await getTasks();
-    });
-
-    const deleteColumn = async (columnId: string) => {
-        const response = await fetch(`/api/column/${columnId}`, {
-            method: 'DELETE',
-        });
-
-        if (response.ok) {
-            columns = columns.filter(column => column.id !== columnId);
-            tasks = tasks.filter(task => task.columnId !== columnId);
-        } else {
-            console.error("Erreur lors de la suppression de la colonne");
-        }
-    };
-
-    const deleteTask = async (taskId: string) => {
-        const response = await fetch(`/api/tasks/${taskId}`, {
-            method: 'DELETE',
-        });
-
-        if (response.ok) {
-            tasks = tasks.filter(task => task.id !== taskId);
-            // goto(`/profile/workspace/${projectId}`).then(() => {
-            //     // Après la redirection, forcer un rechargement de la page
-            //     window.location.reload();
-            // });
-        } else {
-            console.error("Erreur lors de la suppression de la tâche");
-        }
-    };
-
-    const updateColumnName = async (columnId: string, newName: string) => {
-        const response = await fetch(`/api/column/${columnId}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                name: newName,
-            }),
-        });
-
-        if (response.ok) {
-            const updatedColumn = await response.json();
-            columns = columns.map(column =>
-                column.id === columnId ? { ...column, name: updatedColumn.name } : column
-            );
-            // goto(`/profile/workspace/${projectId}`).then(() => {
-            //     // Après la redirection, forcer un rechargement de la page
-            //     window.location.reload();
-            // });
-        } else {
-            console.error("Erreur lors de la mise à jour du nom de la colonne");
-        }
-    };
-
-
-    const getTaskById = async (taskId: string) => {
-        const response = await fetch(`/api/tasks/${taskId}`);
-        if (response.ok) {
-            return await response.json();
-        } else {
-            console.error("Erreur lors de la récupération de la tâche");
-            return null;
-        }
-    };
-    // modal
-    let showModal = $state(false);
-    let task = $state<Task>({
-        id: '',
-        title: '',
-        content: '',
-        columnId: ''
-    });
-    const openModal = async (TaskId: string) => {
-        console.log(TaskId);
-        task = await getTaskById(TaskId); // Await the result of the async function
-
-        console.log(task.title);
-
-        showModal = true;
-    };
-    const closeModal = () => {
-        showModal = false;
-    };
-
-    // modal description
-    let showModalDescription = $state(false);
-    const openModalDescription = () => {
-        showModalDescription = true;
-    };
-    const closeModalDescription = () => {
-        showModalDescription = false;
-    };
-
-    // modal invite
-    let showModalInvite = $state(false);
-    const openModalInvite = () => {
-        showModalInvite = true;
-    };
-    const closeModalInvite = () => {
-        showModalInvite = false;
-    };
-    let email: string = $state('');
-
-    //  inviter un membre
-    const inviteMember = async (email : string) => {
-        // check email
-        const responseUser = await fetch("/api/user/findemail", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                email,
-            }),
-        });
-
-        if (!responseUser.ok) {
-            console.error("Erreur lors de la vérification de l'email");
-            return;
-        }
-
-        const user = await responseUser.json();
-
-        // add member
-        console.log(email, projectId, user.user.id);
-        const response = await fetch("/api/members", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                email: email,
-                id_projet: projectId,
-                role: 'member',
-                id_user: user.user.id
-            }),
-        });
-
-        if (response.ok) {
-            email = '';
-            showModalInvite = false;
-        } else {
-            console.error("Erreur lors de l'invitation du membre");
-        }
-    };
 </script>
-
+<script context="module">
+    export const layout = null;
+</script>
 <style></style>
 
 <link rel="stylesheet" href="/src/lib/styles/workspace/workspacePage.css">
