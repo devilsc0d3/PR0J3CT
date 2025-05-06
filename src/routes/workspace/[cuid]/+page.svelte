@@ -27,6 +27,14 @@
         columnId: string;
     }
 
+    interface Member {
+        id: string;
+        email: string;
+        role: string;
+        id_project: string;
+        id_user: string;
+    }
+
     let project: Project = $state( {
         id: '',
         title: '',
@@ -43,15 +51,18 @@
         columnId: ''
     });
 
+
     const projectId = $page.params.cuid;
 
     let columns: Column[] = $state([]);
     let tasks: Task[] = $state([]);
+    let members: Member[] = $state([]);
+
 
     let taskTitle: string = $state('');
     let email: string = $state('');
     let name: string = $state('');
-
+    let updatedTaskContent : string = $state(task.content);
     //modal task
     let showModal = $state(false);
     const openModal = async (TaskId: string) => {
@@ -85,7 +96,34 @@
         project = await getProjectId();
         columns = await getColumns();
         tasks = await getTasks();
+        let membersResponse = await getMembers();
+        members = membersResponse.members || []; // Extract the members array
+
     });
+
+    // Fonction pour récupérer les membres du projet depuis l'API
+
+    const getMembers = async () => {
+        const response = await fetch(`/api/members/getbyproject/${projectId}`);
+        if (response.ok) {
+            return await response.json();
+        } else {
+            console.error("Erreur lors de la récupération des membres");
+            return [];
+        }
+    };
+
+    const deleteMember = async (memberId: string) => {
+        const response = await fetch(`/api/members/${memberId}`, {
+            method: 'DELETE',
+        });
+
+        if (response.ok) {
+            members = members.filter(member => member.id !== memberId);
+        } else {
+            console.error("Erreur lors de la suppression du membre");
+        }
+    };
 
     // Fonction pour récupérer les infos du projet depuis l'API
     const getProjectId = async () => {
@@ -118,6 +156,28 @@
         } else {
             console.error("Erreur lors de la récupération des tâches");
             return [];
+        }
+    };
+
+    //update task content
+    const updateTaskContent = async (taskId: string, newContent: string) => {
+        const response = await fetch(`/api/tasks/${taskId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                content: newContent,
+            }),
+        });
+
+        if (response.ok) {
+            const updatedTask = await response.json();
+            tasks = tasks.map(task =>
+                task.id === taskId ? { ...task, content: updatedTask.content } : task
+            );
+        } else {
+            console.error("Erreur lors de la mise à jour du contenu de la tâche");
         }
     };
 
@@ -241,9 +301,14 @@
         });
 
         if (response.ok) {
-            const updatedColumn = await response.json();
+            // columns = await getColumns();
+            // let updatedColumn = await response.json();
+            // columns = columns.map(column =>
+            //     column.id === columnId ? { ...column, name: updatedColumn.name } : column
+            // );
+            //
             columns = columns.map(column =>
-                column.id === columnId ? { ...column, name: updatedColumn.name } : column
+                column.id === columnId ? { ...column, name: newName } : column
             );
         } else {
             console.error("Erreur lors de la mise à jour du nom de la colonne");
@@ -294,6 +359,8 @@
             }),
         });
         if (response.ok) {
+            // add member to the list
+            members = await getMembers();
             email = '';
             showModalInvite = false;
         } else {
@@ -346,54 +413,56 @@
             <img class="icon" src="/images/icon/filter.svg" alt="filter" />
         </div>
     </header>
-        <div class="board">
-            {#each columns as column (column.id)}
-                <section class="column" role="region" ondragover={onDragOver} ondrop={(event) => onDrop(event, column.id)}>
-                    <div class="space-between">
-                        <input type="text" bind:value={column.name} onblur={() => updateColumnName(column.id, column.name)} onkeydown={(e) => e.key === 'Enter' && updateColumnName(column.id, column.name)}/>
-                        <button class="new"  onclick={() => deleteColumn(column.id)}>
-                            <img src="/images/icon/delete.svg" alt="Supprimer" class="icon"/>
+    <div class="board">
+        {#each columns as column (column.id)}
+            <section class="column" role="region" ondragover={onDragOver} ondrop={(event) => onDrop(event, column.id)}>
+                <div class="space-between">
+                    <input type="text" bind:value={column.name} onblur={() => updateColumnName(column.id, column.name)} onkeydown={(e) => e.key === 'Enter' && updateColumnName(column.id, column.name)}/>
+                    <button class="new"  onclick={() => deleteColumn(column.id)}>
+                        <img src="/images/icon/delete.svg" alt="Supprimer" class="icon"/>
+                    </button>
+                </div>
 
-                        </button>
-                    </div>
-
-                    <div class="tasks">
-                        {#each getTasksForColumn(column.id) as task (task.id)}
-                            <button onclick={() => openModal(task.id)}>
-                                <div class="task" role="region" draggable="true" ondragstart={(event) => onDragStart(event, task.id, task.columnId)} ondragend={onDragEnd}>
+                <div class="tasks">
+                    {#each getTasksForColumn(column.id) as task (task.id)}
+                        <button onclick={() => openModal(task.id)}>
+                            <div class="task" role="region" draggable="true" ondragstart={(event) => onDragStart(event, task.id, task.columnId)} ondragend={onDragEnd}>
                                 <div class="space-between">
                                     <h3>{task.title}</h3>
                                 </div>
                             </div>
-                            </button>
-                        {/each}
-                    </div>
-                        <form onsubmit={(event) => {
+                        </button>
+                    {/each}
+                </div>
+                <form onsubmit={(event) => {
                           event.preventDefault();
                           createTask(event, column.id);
                         }}>
-                        <input type="hidden" name="columnId" value={column.id} />
-                        <input type="text" placeholder="Nouvelle tâche" name="title" bind:value={taskTitle} />
-                        <button type="submit" class="color-white">Ajouter</button>
-                    </form>
-                </section>
-            {/each}
-            <section class="column">
-                <form onsubmit={createColumn}>
-                    <input type="text" placeholder="Nom de la colonne" name="name" bind:value={name} />
+                    <input type="hidden" name="columnId" autofocus value={column.id} />
+                    <input type="text" placeholder="Nouvelle tâche" name="title" bind:value={taskTitle} />
                     <button type="submit" class="color-white">Ajouter</button>
                 </form>
             </section>
-        </div>
+        {/each}
+        <section class="column">
+            <form onsubmit={createColumn}>
+                <input type="text" placeholder="Nom de la colonne" name="name" bind:value={name} />
+                <button type="submit" class="color-white">Ajouter</button>
+            </form>
+        </section>
+    </div>
 </div>
 
 <Modal bind:showModal onClose={closeModal}>
     <div class="center">
-        <h1>{task.title}</h1>
-        <textarea>{task.content}</textarea>
-        <button onclick={() => {deleteTask(task.id);showModal = false;}}>
-            <img src="/images/icon/delete.svg" alt="Supprimer button" class="icon"/>
-        </button>
+        <div class="space-between">
+            <h1>{task.title}</h1>
+            <button onclick={() => {deleteTask(task.id);showModal = false;}}>
+                <img src="/images/icon/delete.svg" alt="Supprimer button" class="icon"/>
+            </button>
+        </div>
+        <textarea class="description-task" bind:value={updatedTaskContent}>{task.content}</textarea>
+        <button class="button-container" onclick={() => {updateTaskContent(task.id,updatedTaskContent)}}>Save</button>
     </div>
 </Modal>
 
@@ -405,10 +474,17 @@
 </ModalDescription>
 
 <ModalInvite bind:showModalInvite onClose={closeModalInvite} closeModalInvite={closeModalInvite}>
-    <div class="center-block br-50px blue">
+    <div class="center-block br-50px blue" style="margin: 20px">
         <h1>Inviter un membre</h1><br>
-        <p>Entrez l'adresse e-mail de la personne que vous souhaitez inviter à rejoindre votre projet.</p>
+        <p>Entrez l'adresse e-mail de la personne <br>que vous souhaitez inviter à rejoindre votre projet.</p>
         <input type="email" placeholder="Adresse e-mail" bind:value={email} />
-        <button onclick={() => inviteMember(email)}>Inviter</button>
+        <button type=submit onclick={() => inviteMember(email)} style="color: white">Inviter</button>
+        <!-- Display members -->
+        {#each members as member}
+            <div class="member space-between">
+                <p>{member.email}</p>
+                <button onclick={() => {deleteMember(member.id)}}><img src="/images/icon/delete.svg" alt="Supprimer" class="icon"/></button>
+            </div>
+        {/each}
     </div>
 </ModalInvite>

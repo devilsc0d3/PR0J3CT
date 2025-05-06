@@ -21,12 +21,13 @@ export const GET: RequestHandler = async ({ params }) => {
     }
 };
 
-export const PUT: RequestHandler = async ({ request }) => {
-    const { id, title, content, columnId } = await request.json();
+export const PUT: RequestHandler = async ({ params, request }) => {
+    const { title, content, columnId } = await request.json();
+    const { cuid } = params;
 
     try {
         const task = await prisma.tasks.update({
-            where: { id },
+            where: { id: cuid },
             data: {
                 title,
                 content,

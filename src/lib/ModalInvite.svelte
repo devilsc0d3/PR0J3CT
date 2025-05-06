@@ -22,7 +22,7 @@
         left: 50%;
         transform: translate(-50%, -50%);
         min-width: 300px;
-        min-height: 400px;
+        /*min-height: 400px;*/
         background: #1c1c1c;
         color: #ffffff;
         border-radius: 15px;
@@ -40,9 +40,9 @@
     }
 </style>
 
-<div id="background" class="overlay2 modal-backdrop" style:display={showModalInvite ? 'block' : 'none'}>
-<!--<div id="background" class="overlay2 modal-backdrop" on:click={closeModalInvite} style:display={showModalInvite ? 'block' : 'none'}>-->
-    <div class="center modal">
+<!--<div id="background" class="overlay2 modal-backdrop" style:display={showModalInvite ? 'block' : 'none'}>-->
+<div id="background" class="overlay2 modal-backdrop" on:click={closeModalInvite} style:display={showModalInvite ? 'block' : 'none'}>
+    <div class="center modal"  on:click|stopPropagation>
         <slot></slot>
     </div>
 </div>

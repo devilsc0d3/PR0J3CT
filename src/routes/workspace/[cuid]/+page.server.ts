@@ -1,5 +1,4 @@
-// src/routes/profile/+page.server.ts
-import { redirect } from '@sveltejs/kit';
+import {redirect} from '@sveltejs/kit';
 
 export async function load({ locals }) {
     if (!locals.user) {
@@ -7,6 +6,6 @@ export async function load({ locals }) {
     }
 
     return {
-        user: locals.user
-    };
+        user: locals.user,
+    }
 }

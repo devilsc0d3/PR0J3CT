@@ -1,10 +1,17 @@
 <script lang="ts">
     export let showModalDescription: boolean;
     export let onClose: () => void;
+
     const closeModalDescription= () => {
         onClose();
     };
 </script>
+
+<div id="background" class="overlay2 modal-backdrop" on:click={closeModalDescription} style:display={showModalDescription ? 'block' : 'none'}>
+    <div class="center modal" on:click|stopPropagation>
+        <slot></slot>
+    </div>
+</div>
 
 <style>
     #background {
@@ -40,9 +47,3 @@
         z-index: 10;
     }
 </style>
-
-<div id="background" class="overlay2 modal-backdrop" on:click={closeModalDescription} style:display={showModalDescription ? 'block' : 'none'}>
-    <div class="center modal">
-        <slot></slot>
-    </div>
-</div>

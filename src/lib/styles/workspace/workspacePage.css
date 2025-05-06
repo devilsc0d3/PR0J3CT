@@ -126,6 +126,31 @@ button {
     display: block;
 }
 
+.button-container {
+    border-radius: 15px;
+    background-color: rgb(253, 189, 45);
+    padding: 10px;
+    margin: 0 auto;
+    width: 100px;
+    max-width: 300px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.description-task {
+    background: #fff;
+    width: auto;
+    margin: 5px;
+    padding: 10px 14px;
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: transform var(--transition);
+    cursor: grab;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+}
 
 input[type="text"] {
     padding: 8px;

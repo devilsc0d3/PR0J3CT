@@ -34,7 +34,7 @@ model projects {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  user   Users  @relation(fields: [userId], references: [id])
+  user   Users  @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
 
   column column[]
@@ -51,7 +51,7 @@ model column {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  project   projects @relation(fields: [projectId], references: [id])
+  project   projects @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId String
 
   task tasks[]
@@ -64,7 +64,7 @@ model tasks {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  column   column @relation(fields: [columnId], references: [id])
+  column   column @relation(fields: [columnId], references: [id], onDelete: Cascade)
   columnId String
 
   tags tags[]
@@ -75,7 +75,7 @@ model tags_pref {
   id_project String
   name       String
 
-  project   projects @relation(fields: [id_project], references: [id])
+  project   projects @relation(fields: [id_project], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -88,8 +88,8 @@ model tags {
   id_task      String
   name         String
 
-  tags_pref tags_pref @relation(fields: [id_tags_pref], references: [id])
-  task      tasks     @relation(fields: [id_task], references: [id])
+  tags_pref tags_pref @relation(fields: [id_tags_pref], references: [id], onDelete: Cascade)
+  task      tasks     @relation(fields: [id_task], references: [id], onDelete: Cascade)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }
@@ -104,8 +104,8 @@ model members {
   id_user   String @unique
   id_projet String @unique
 
-  user   Users    @relation(fields: [id_user], references: [id])
-  projet projects @relation(fields: [id_projet], references: [id])
+  user   Users    @relation(fields: [id_user], references: [id], onDelete: Cascade)
+  projet projects @relation(fields: [id_projet], references: [id], onDelete: Cascade)
 }
 
 model favorites {
@@ -115,6 +115,6 @@ model favorites {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  user    Users    @relation(fields: [id_user], references: [id])
-  project projects @relation(fields: [id_project], references: [id])
+  user    Users    @relation(fields: [id_user], references: [id], onDelete: Cascade)
+  project projects @relation(fields: [id_project], references: [id], onDelete: Cascade)
 }

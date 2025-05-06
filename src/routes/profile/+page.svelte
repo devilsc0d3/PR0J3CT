@@ -31,22 +31,6 @@
         projectsMember = await getProjectsMember();
     });
 
-    /**
-     * Logs out the user by calling the logout API.
-     * Redirects to the login page on success.
-     */
-    const logout = async () => {
-        const res = await fetch('/api/user/logout', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' }
-        });
-
-        if (res.ok) {
-            window.location.href = '/login';
-        } else {
-            console.error('Logout failed');
-        }
-    };
 
     /**
      * Fetches the projects of the user from the API.
@@ -136,25 +120,56 @@
      * Toggles the favorite status of a project.
      * @param {string} idProject - The ID of the project to toggle.
      */
-    function favorite(idProject : string) {
-        // check if the project is already in the favorites with id_user and id_project
-        const isFavorite = false;
-        if (isFavorite) {
+    async function favorite(idProject: string) {
+        const favoriteProject = await fetch('/api/favorites/get', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                id_user,
+                id_project: idProject
+            })
+        });
+        console.log(favoriteProject);
+
+
+        if (favoriteProject.ok) {
+            console.log("u");
+
             // remove from favorites
-            fetch('/api/favorites/' , {
+            let res = fetch('/api/favorites/', {
                 method: 'DELETE',
-                headers: { 'Content-Type': 'application/json' }
-            });
-        } else {
-            // add to favorites
-            fetch('/api/favorites', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
                     id_user,
                     id_project: idProject
                 })
             });
+            // remove class active and add inactive
+            const projectElement = document.querySelector(`.project-${idProject}`);
+            if (projectElement) {
+                projectElement.classList.remove('active');
+                projectElement.classList.add('inactive');
+            }
+
+        } else {
+            // add to favorites
+            console.log("n");
+            let res = await fetch('/api/favorites', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    id_user,
+                    id_project: idProject
+                })
+            });
+
+            // add class active
+            const projectElement = document.querySelector(`.project-${idProject}`);
+            projectElement?.classList.add('active');
+            if (projectElement) {
+                projectElement.classList.add('active');
+                projectElement.classList.remove('inactive');
+            }
         }
     }
 
@@ -168,9 +183,21 @@
     };
 </script>
 
-<style></style>
+<style>
+    .active {
+        background-color: #fdbd2d;
+        color: black;
+    }
+
+    .inactive {
+        background-color: #ffffff;
+        color: #fdbd2d;
+        border: 1px solid #fdbd2d;
+    }
+</style>
 
 <link rel="stylesheet" href="/src/lib/styles/profile/profilePage.css">
+
 
 <main>
     <h1>My Pr0j3cts</h1>
@@ -185,8 +212,9 @@
                         </div>
                     </a>
                     <div class="tag">
-                        <button class="tag-favorite" onclick={() => favorite(project.id)}>favorite</button>
                         <button class="tag-delete" onclick={() => deleteProject(project.id)}>supprimer</button>
+                        <button id="{'project-' + project.id}" class="tag-favorite inactive" onclick={() => favorite(project.id)}>favorite</button>
+
                     </div>
                 </div>
 
@@ -214,7 +242,7 @@
         </li>
     {/each}
     {#if projectsMember.length === 0}
-        <p class="marge-50 nothing">Aucun projet</p>
+        <p class="marge-50 nothing">Aucune invitation</p>
     {/if}
 
     <button onclick={openModal} class="new" style="z-index: 10">
@@ -247,10 +275,10 @@
             {#if backgroundType === 'color'}
                 <input type="color" bind:value={background} class="form-color" />
             {:else}
-                <p>
+                <p style="font-size: 12px">
                     exemple : <br>
                      - couleur : rgb(255,0,247)<br>
-                     - degradé : linear-gradient(90deg, rgba(255,0,247,1) 0%, rgba(255,0,0,1) 100%)<br>
+                     - degradé : linear-gradient(45deg, #ff9a9e, #fad0c4)<br>
                      - image url : https://example.com/image.jpg<br>
                     ...
                 </p>

@@ -27,10 +27,9 @@ export const GET: RequestHandler = async ({ params }) => {
                 },
             },
         });
-
-
         return json({ message: "projects found", projects });
     } catch (error) {
         return json({ error: 'Error fetching members' }, { status: 500 });
     }
 }
+

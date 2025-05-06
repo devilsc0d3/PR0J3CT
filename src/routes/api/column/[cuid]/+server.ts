@@ -9,6 +9,7 @@ export const GET: RequestHandler = async ({ params }) => {
         const { cuid } = params;
         const columns = await prisma.column.findMany({
             where: { projectId: cuid },
+            orderBy : { createdAt: 'asc' },
         });
 
         return json(columns);
