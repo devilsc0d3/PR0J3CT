@@ -68,6 +68,58 @@
         }
     }
 
+    .app-footer {
+        background-color: #1c1c1e;
+        color: #eaeaea;
+        padding: 40px 20px;
+        font-size: 0.95rem;
+        border-top: 2px solid #f5b700;
+    }
+
+    .footer-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        max-width: 1100px;
+        margin: 0 auto;
+        gap: 20px;
+    }
+
+    .footer-left p,
+    .footer-right p {
+        margin: 5px 0;
+    }
+
+    .footer-left {
+        max-width: 60%;
+    }
+
+    .footer-right {
+        text-align: right;
+        max-width: 35%;
+    }
+
+    .brand {
+        color: #f5b700;
+        font-weight: bold;
+    }
+
+    /* Responsive */
+    @media screen and (max-width: 768px) {
+        .footer-content {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .footer-left,
+        .footer-right {
+            max-width: 100%;
+            text-align: center;
+        }
+    }
+
+
 </style>
 <div class="body">
     <!-- header -->
@@ -162,9 +214,15 @@
     </section>
 
 
-    <footer>
-        <div class="space-between">
-            <p>© 2025 Pr0j3ct. All rights reserved.</p>
+    <footer class="app-footer">
+        <div class="footer-content">
+            <div class="footer-left">
+                <p><strong>Pr0j3ct</strong> — Une application signée <span class="brand">thesauvo</span></p>
+                <p>Conçue avec passion par <strong>Léo Fauré</strong></p>
+            </div>
+            <div class="footer-right">
+                <p>© 2025 Pr0j3ct. Tous droits réservés.</p>
+            </div>
         </div>
     </footer>
 
