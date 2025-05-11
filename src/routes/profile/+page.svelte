@@ -1,7 +1,7 @@
 <script lang="ts">
 
     import {onMount} from "svelte";
-    import Modal from "$lib/Modal.svelte";
+    import Modal from "$lib/ModalCreate.svelte";
 
     interface Project {
         id: string;
@@ -288,8 +288,8 @@
 
             <button type="submit" class="form-button">Créer le projet</button>
         </form>
-        {#if success}
-            <p class="success-message">{success}</p>
-        {/if}
+        <!--{#if success}-->
+        <!--    <p class="success-message">{success}</p>-->
+        <!--{/if}-->
     </div>
 </Modal>

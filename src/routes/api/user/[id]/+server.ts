@@ -23,3 +23,17 @@ export const GET: RequestHandler = async ({ params }) => {
         return json({ error: 'Erreur lors de la récupération de l\'utilisateur' }, { status: 500 });
     }
 }
+
+export const DELETE : RequestHandler = async ({ params }) => {
+    const { id } = params;
+
+    try {
+        const user = await prisma.users.delete({
+            where: { id },
+        });
+
+        return json(user);
+    } catch (error) {
+        return json({ error: 'Erreur lors de la suppression de l\'utilisateur' }, { status: 500 });
+    }
+}

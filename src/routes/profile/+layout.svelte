@@ -1,3 +1,4 @@
+
 <script>
     let { children } = $props();
 
@@ -5,7 +6,7 @@
      * Logs out the user by calling the logout API.
      * Redirects to the login page on success.
      */
-    const logout = async () => {
+    export const logout = async () => {
         const res = await fetch('/api/user/logout', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' }

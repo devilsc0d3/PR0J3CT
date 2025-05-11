@@ -71,13 +71,15 @@ li {
 
 .card {
     width: clamp(250px, 50vw, 400px);
-    height: 100px;
+    height: auto;
     border: 1px solid #ced4da;
     border-radius: 0.25rem;
     padding: 1rem;
     background-size: cover;
     background-color: #ffffff;
     color: black;
+    display: block;
+    text-align: center;
     margin: 10px;
 }
 

@@ -2,9 +2,9 @@ version: '3.8'
 
 services:
   # postgres container
-  postgres:
+  db:
     image: postgres:17
-    container_name: db_pr0j3ct
+    container_name: db
     restart: always
     environment:
       POSTGRES_USER: postgres
@@ -30,7 +30,26 @@ services:
     networks:
       - db_network
     depends_on:
-      - postgres
+      - db
+
+  #pr0j3ct
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: app
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - DATABASE_URL=postgresql://postgres:root@db:5432/db?schema=public
+    depends_on:
+      - db
+    command: ["npm", "run", "dev", "--", "--host"]
+    networks:
+      - db_network
 
 volumes:
     postgres_data:

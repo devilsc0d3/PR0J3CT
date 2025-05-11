@@ -59,7 +59,7 @@
     let members: Member[] = $state([]);
 
 
-    let taskTitle: string = $state('');
+    let taskTitles: Record<string, string> = $state({});
     let email: string = $state('');
     let name: string = $state('');
     let updatedTaskContent : string = $state(task.content);
@@ -258,7 +258,8 @@
     // Fonction pour créer une nouvelle tâche via l'API
     const createTask = async (event: Event, idColumn: string) => {
         event.preventDefault();
-        if (!taskTitle) {
+        const title = taskTitles[idColumn] || '';
+        if (!title) {
             console.error("Le titre de la tâche ne peut pas être vide");
             return;
         }
@@ -268,19 +269,20 @@
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                title: taskTitle,
+                title,
                 content: '',
                 columnId: idColumn,
             }),
         });
 
         if (response.ok) {
-            taskTitle = '';
+            taskTitles[idColumn] = '';
             tasks = await getTasks();
         } else {
             console.error("Erreur lors de la création de la tâche");
         }
     };
+
     let draggedTaskId: string | null = null;
     let draggedColumnId: string | null = null;
 
@@ -439,7 +441,7 @@
                           createTask(event, column.id);
                         }}>
                     <input type="hidden" name="columnId" autofocus value={column.id} />
-                    <input type="text" placeholder="Nouvelle tâche" name="title" bind:value={taskTitle} />
+                    <input type="text" placeholder="Nouvelle tâche" name="title" bind:value={taskTitles[column.id]} />
                     <button type="submit" class="color-white">Ajouter</button>
                 </form>
             </section>

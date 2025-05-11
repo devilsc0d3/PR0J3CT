@@ -8,6 +8,67 @@
 
 <link rel="stylesheet" href="/src/lib/styles/home/homePage.css">
 
+<style>
+    .presentation-section {
+        padding: 60px 20px;
+        background-color: #f9f9f9;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .section-title {
+        font-size: 2rem;
+        text-align: center;
+        color: #333;
+        margin-bottom: 40px;
+        font-weight: 700;
+    }
+
+    .presentation-content {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 40px;
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+
+    .text-block {
+        flex: 1 1 400px;
+        font-size: 1.1rem;
+        line-height: 1.6;
+        color: #555;
+        padding: 10px;
+    }
+
+    .text-block strong {
+        color: #f5b700;
+    }
+
+    .image-block {
+        flex: 1 1 400px;
+        text-align: center;
+    }
+
+    .responsive-image {
+        max-width: 100%;
+        height: auto;
+        border-radius: 12px;
+    }
+
+    /* Responsive tweaks */
+    @media screen and (max-width: 768px) {
+        .presentation-content {
+            flex-direction: column;
+            padding: 0 10px;
+        }
+
+        .section-title {
+            font-size: 1.6rem;
+        }
+    }
+
+</style>
 <div class="body">
     <!-- header -->
     <section class="main-content">
@@ -36,25 +97,76 @@
         </div>
     </section>
 
-    <!-- presentation -->
-    <section>
-        <h1 class="section-title">Des projects sans limite !</h1>
-        <img src="/images/icon/peoples.jpg" alt="People working together" class="people-image">
+    <!-- Présentation modernisée -->
+    <section class="presentation-section">
+        <h1 class="section-title">Gérez vos projets, sans limite</h1>
+        <div class="presentation-content">
+            <div class="text-block">
+                <p>
+                    <strong>Pr0j3ct</strong> est une plateforme intuitive basée sur un système Kanban moderne, idéale pour organiser, suivre et faire évoluer vos projets à votre rythme.
+                </p>
+                <p>
+                    Collaborez en temps réel avec vos équipes, assignez des tâches, définissez des priorités et visualisez l'avancement de vos projets en un clin d'œil.
+                </p>
+                <p>
+                    Conçu pour les étudiants, entrepreneurs, développeurs ou créateurs : vous avez le contrôle total sur vos projets.
+                </p>
+            </div>
+            <div class="image-block">
+                <img src="/images/icon/p02.png" alt="Kanban Board" class="responsive-image">
+            </div>
+        </div>
     </section>
 
-    <section>
-        <h1 class="section-title">Des outils pour vous aider</h1>
-        <img src="/images/icon/peoples.jpg" alt="Tools" class="tools-image">
+    <section class="presentation-section">
+        <h1 class="section-title">Une personnalisation sans faille</h1>
+        <div class="presentation-content">
+            <div class="text-block">
+                <p>
+                    Choisissez vos couleurs, organisez vos colonnes comme vous le souhaitez, changez les icônes et adaptez l’interface à votre manière de travailler.
+                    Chaque détail peut être configuré pour répondre à vos besoins.
+                </p>
+            </div>
+            <div class="image-block">
+                <img src="/images/icon/personnalized.png" alt="Customizable Dashboard" class="responsive-image">
+            </div>
+        </div>
     </section>
 
-    <section>
-        <h1 class="section-title">Une personalisation total</h1>
-        <img src="/images/icon/peoples.jpg" alt="Community" class="community-image">
+    <section class="presentation-section">
+        <h1 class="section-title">Collaboration idéale</h1>
+        <div class="presentation-content">
+            <div class="text-block">
+                <p>
+                    Invitez vos collègues, amis ou membres d’équipe, et collaborez efficacement grâce aux commentaires, aux notifications en temps réel et à la gestion de rôles.
+                </p>
+            </div>
+            <div class="image-block">
+                <img src="/images/icon/clipart.png" alt="Team Collaboration" class="responsive-image">
+            </div>
+        </div>
     </section>
+
+    <section class="presentation-section">
+        <h1 class="section-title">Support multilingue</h1>
+        <div class="presentation-content">
+            <div class="text-block">
+                <p>
+                    Disponible en plusieurs langues (français, anglais, espagnol, allemand…), <strong>Pr0j3ct</strong> s’adapte à tous vos collaborateurs, où qu’ils soient.
+                </p>
+            </div>
+            <div class="image-block">
+                <img src="/images/icon/Translation.png" alt="Languages" class="responsive-image">
+            </div>
+        </div>
+    </section>
+
 
     <footer>
         <div class="space-between">
             <p>© 2025 Pr0j3ct. All rights reserved.</p>
         </div>
     </footer>
+
+
 </div>

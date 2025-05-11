@@ -5,7 +5,7 @@ declare global {
 	namespace App {
 
 		interface Locals {
-			user: JwtPayload & { id: number } | null;
+			user: JwtPayload & { id: string, email: string } | null;
 		}
 	}
 	declare type Item = import('svelte-dnd-action').Item;
